@@ -1,0 +1,79 @@
+jadi ini mau ada 2 tipe akun:
+
+akun abstrak dan akun Pegasus?
+dan akun Pegasus passwordnya autogen dari event pada saat ini?
+
+abstrak mau secara spesifik 3 file max?
+dan cuma ambil format pdf,doc,docx,xls,xlsx,txt,rtf,jpg, dan png?
+ga mau ambil zip di 1 file aja sekalian?
+
+apa ini bakal di daur ulang ke projek lain yang mirip abstrak tapi bukan Pegasus?
+
+
+holy shit, setelah dipikir ini projek yang SANGAT BERBAHAYA. Uploading files? sure easy. display files? ok.
+gimana kalo isinya zipbomb? ato gimana kalo isinya ssh? ga papa ga asumsi dokter terlalu bego (dan bijak) untuk ga iseng gini?
+
+
+
+system penampilan files:
+
+kalo zip <-- fuck, kalo isinya zip bomb gimana? limit extracted file size? 1 tera?
+bikin inbrowser file browser
+klo klik file bakal ditunjukin pada halaman baru?
+
+kalo 3 stok file?
+¯\_(ツ)_/¯, harusnya aman pake system penampilan yang sama
+------------------------------------------
+
+prioritas:
+penyimpanan dan penampilan files
+------------------------------------------
+
+integrasi dengan wp:
+
+- ga ada identifier(setidaknya ga ada yang bisa di akses). Asumsi email ga bisa ada yang sama, maka pake email sebagai identifier untuk nyambungin dokumen zip. 
+
+- ga boleh ngasih nama file dengan email, mungkin pake nama file original? bakal ada banyak file dengan nama "final.zip". Bikin folder per user? email bakal jadi nama folder, tapi enkripsi dulu. <- sha 256 belum pernah ada collision semejak 2001
+
+- bakal ribet untuk ngambil email dari frontend wordpress, kalo ga bisa tinggal bikin user tulis di form
+
+
+perlu run ini pas deployment
+php artisan storage:link
+
+
+!!!SHIT!!!
+drop semua yang di atas, bikin system login sendiri
+pokoknya system web yang bisa ngambil zip dengan isi dokumen abstrak or whaterver
+terus bikin rute lain yang bisa display abstrak, mirip qna tapi kebalik, disini kamu perlu login untuk submit.
+eh, mening view juga ada login ketang.
+
+coret semua yang di atas. bikin REST API aja
+
+nama folder jadi pake judul abstrak aja, ntar cari  pake database
+
+------------------------------------------
+
+sekuritas:
+
+zipbomb: limit ukuran file dalem zip
+
+shell(code execution): pake ime_content_type(), taro di storage/app
+
+dir transversal: cuci pake ZipArchive::getNameIndex() trus hapus ".." dan "/"
+
+file injection: bikin folder user email dengan encripsi
+
+xss: jangan tampilin di html
+
+dos: limit ukuran zip
+-------------------------------------------
+
+deployment:
+
+perlu 
+
+artisan: clone dari git
+zip: udah ada
+
+seharusnya aman, kayaknya, mungkin aman

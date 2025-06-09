@@ -1,0 +1,12 @@
+Debug Info
+
+{
+  "os": "win32",
+  "arch": "x64",
+  "php_version": "8.2.12",
+  "laravel_version": "12.16.0",
+  "php_command": "php"
+}
+
+----------------------------------------
+

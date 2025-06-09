@@ -46,9 +46,9 @@ return new class extends Migration
             $table->foreignId('abstract_account_id')->constrained()->onDelete('cascade');
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('description');
+            $table->string('description', 1000);
             $table->string('file_directory');
-            $table->enum('topic', ['Gastroentrology', 'hepatology', 'others(miscellaneous)']);
+            $table->enum('topic', ['gastroentrology', 'hepatology', 'others(miscellaneous)']);
             $table->enum('presentation_type',['poster','oral']);
             $table->timestamps();
         });

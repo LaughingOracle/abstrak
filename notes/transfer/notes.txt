@@ -1,0 +1,9 @@
+email&pass
+jordaninformatics@gmail.com
+jamesjordan
+
+
+03/06/2025:
+fungsi upload dan view sudah jadi, cuma di page upload nama folder masih static, seharusnya gampang buat diperbaikin, cuma perlu tambahin text input
+
+database table udah jadi tapi belum diisi ataupun digunakan dalam kapasitas manapun
