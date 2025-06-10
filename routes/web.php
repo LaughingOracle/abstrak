@@ -11,3 +11,13 @@ Route::get('/view/{title}', [ZipUploadController::class, 'viewFile']);
 
 Route::get('/upload', [ZipUploadController::class, 'showForm'])->name('zip.form');
 Route::post('/upload', [ZipUploadController::class, 'handleUpload'])->name('zip.upload');
+
+Route::middleware([
+    'auth:sanctum',
+    config('jetstream.auth_session'),
+    'verified',
+])->group(function () {
+    Route::get('/dashboard', function () {
+        return view('dashboard');
+    })->name('dashboard');
+});

@@ -14,7 +14,9 @@ class AbstractPaper extends Model
         'description',
         'file_directory',
         'topic',
-        'presentation_type'
+        'presentation_type',
+        'abstract_account_id',
+        'presenter_id'
     ];
 
     public function abstractAccount()
@@ -28,6 +30,6 @@ class AbstractPaper extends Model
     }
     public function author()
     {
-        return $this->belongsTo(author::class);
+        return $this->belongsToMany(author::class);
     }
 }

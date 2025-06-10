@@ -46,14 +46,14 @@ return new class extends Migration
             $table->foreignId('abstract_account_id')->constrained()->onDelete('cascade');
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
-            $table->string('description', 1000);
+            $table->string('description', 2048);
             $table->string('file_directory');
             $table->enum('topic', ['gastroentrology', 'hepatology', 'others(miscellaneous)']);
             $table->enum('presentation_type',['poster','oral']);
             $table->timestamps();
         });
 
-        Schema::create('pivots', function (Blueprint $table) {
+        Schema::create('abstract_paper_author', function (Blueprint $table) {
             $table->foreignId('abstract_paper_id')->constrained()->onDelete('cascade');
             $table->foreignId('author_id')->constrained()->onDelete('cascade');
         });
@@ -97,7 +97,7 @@ return new class extends Migration
         Schema::dropIfExists('authors');
         Schema::dropIfExists('presenters');
         Schema::dropIfExists('abstracts');
-        Schema::dropIfExists('pivots');
+        Schema::dropIfExists('abstract_paper_author');
         Schema::dropIfExists('event_accounts');
         Schema::dropIfExists('sponsors');
     }

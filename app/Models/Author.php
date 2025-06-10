@@ -17,6 +17,6 @@ class Author extends Model
 
     public function abstractPaper()
     {
-        return $this->belongsToMany(abstractPaper::class);
+        return $this->belongsToMany(abstractPaper::class,'pivot');
     }
 }
