@@ -1,0 +1,10 @@
+tambahin kolum status   x
+
+ubah nama depan n belakang jadi full name, dan username x
+
+ilangin login n register dari user logged in x
+
+bikin halaman setelah login k either update atau tambah abstrak x
+bikin halaman update abstrak & hapus
+
+bikin sistem browser

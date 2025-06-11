@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Author;
+use App\Models\Presenter;
 
 class AbstractPaper extends Model
 {
@@ -16,7 +18,8 @@ class AbstractPaper extends Model
         'topic',
         'presentation_type',
         'abstract_account_id',
-        'presenter_id'
+        'presenter_id',
+        'status'
     ];
 
     public function abstractAccount()

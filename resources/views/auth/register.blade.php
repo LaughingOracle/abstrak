@@ -17,14 +17,14 @@
 
             <!-- First Name -->
             <div class="mt-4">
-                <x-label for="first_name" value="First Name" />
-                <x-input id="first_name" class="block mt-1 w-full" type="text" name="first_name" :value="old('first_name')" required />
+                <x-label for="full_name" value="Full name" />
+                <x-input id="full_name" class="block mt-1 w-full" type="text" name="full_name" :value="old('full_name')" required />
             </div>
 
             <!-- Last Name -->
             <div class="mt-4">
-                <x-label for="last_name" value="Last Name" />
-                <x-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required />
+                <x-label for="username" value="Username" />
+                <x-input id="username" class="block mt-1 w-full" type="text" name="username" :value="old('username')" required />
             </div>
 
             <!-- Phone Number -->

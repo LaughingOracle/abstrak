@@ -78,7 +78,7 @@ class ZipUploadController extends Controller
                     'presentation_type' => $validated['presentation_type'],
                     'file_directory' => $extractPath,
                     'abstract_account_id' => 1, //placeholder untuk id dari user
-                    'presenter_id' => $presenter -> id
+                    'presenter_id' => $presenter -> id,
                 ]);
                 
                 // Insert multiple authors

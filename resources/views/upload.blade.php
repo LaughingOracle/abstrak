@@ -8,17 +8,17 @@
         @csrf
 
         <label for="title">title</label>
-        <input type="text" name="title" id="title">
+        <input type="text" name="title" id="title" required>
 
         <br><br>
 
         <label for="description">description</label>
-        <input type="text" name="description" id="description">
+        <input type="text" name="description" id="description" required>
 
         <br><br>
 
         <label for="topic">topic:</label>
-        <select id="topic" name="topic">
+        <select id="topic" name="topic" required>
             <option value="">--Please choose an option--</option>
             <option value="gastroentrology">gastroentrology</option>
             <option value="hepatology">hepatology</option>
@@ -28,7 +28,7 @@
         <br><br>
 
         <label for="presentation_type">presentation type:</label>
-        <select id="presentation_type" name="presentation_type">
+        <select id="presentation_type" name="presentation_type" required>
             <option value="">--Please choose an option--</option>
             <option value="poster">poster</option>
             <option value="oral">oral</option>
@@ -41,12 +41,12 @@
         <br><br><br>
 
         <label for="presenter_name">Presenter name</label>
-        <input type="text" name="presenter_name" id="presenter_name">
+        <input type="text" name="presenter_name" id="presenter_name" required>
 
         <br><br>
 
         <label for="presenter_email">Presenter email</label>
-        <input type="text" name="presenter_email" id="presenter_email">
+        <input type="text" name="presenter_email" id="presenter_email" required>
 
         <br><br><br>
 

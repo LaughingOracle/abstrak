@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('email');
             $table->string('password');
             $table->string('title');
-            $table->string('first_name');
-            $table->string('last_name');
+            $table->string('full_name');
+            $table->string('username');
             $table->string('phone_number');
             $table->string('institution');
             $table->enum('contact_preference', ['email', 'phone number']);
@@ -50,6 +50,7 @@ return new class extends Migration
             $table->string('file_directory');
             $table->enum('topic', ['gastroentrology', 'hepatology', 'others(miscellaneous)']);
             $table->enum('presentation_type',['poster','oral']);
+            $table->enum('status',['dalam review','lulus', 'tidak lulus']);
             $table->timestamps();
         });
 
