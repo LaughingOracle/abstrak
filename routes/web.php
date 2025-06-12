@@ -13,10 +13,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/view/{title}', [ZipUploadController::class, 'viewFile']);
+Route::get('/view/{title}', [ZipUploadController::class, 'viewFile'])->name('view');
 
 Route::get('/client/{name}', [ClientController::class, 'listing'])->name('listing');
-Route::post('/client', [ClientController::class, 'review'])->name('reviewed');
+Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
+Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {
