@@ -13,4 +13,4 @@ apa bisa string di abstrak aja? x
 
 bikin sistem browser
     - browser admin: perlu ada sistem filter, perlu ada sistem katalog dokter, perlu ada sistem asign dokter x
-    - browser dokter: perlu ada sistem procedurally generated link, perlu ada sistem lolos/tidak status dan ubah tipe presentasi
+    - browser dokter: perlu ada sistem procedurally generated link, perlu ada sistem lolos/tidak status dan ubah tipe presentasi x

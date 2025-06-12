@@ -2,7 +2,6 @@
     <thead>
         <tr>
             <th>Title</th>
-            <th>Status</th>
             <th>Topic</th>
             <th>Reviewer</th>
             <th>File</th>
@@ -14,7 +13,6 @@
         @foreach ($abstractPapers as $paper)
             <tr>
                 <td>{{ $paper->title }}</td>
-                <td>{{ $paper->status }}</td>
                 <td>{{ $paper->topic }}</td>
                 <td>{{ $paper->reviewer }}</td>
                 <td>

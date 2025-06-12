@@ -31,4 +31,4 @@ backend update masih belum dikerjain
 12/06/2025
 backend update udah jalan
 dashboad 100% operational (ui minimal, tapi menurut w udah cukup bagus ¯\_(ツ)_/¯)
-backend klien 50%
+backend klien 90%. kurang lebih jadi, tinggal smtp
