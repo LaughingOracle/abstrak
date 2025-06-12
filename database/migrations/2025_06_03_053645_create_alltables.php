@@ -47,7 +47,7 @@ return new class extends Migration
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('description', 2048);
-            $table->string('file_directory');
+            $table->string('reviewer')->nullable();
             $table->enum('topic', ['gastroentrology', 'hepatology', 'others(miscellaneous)']);
             $table->enum('presentation_type',['poster','oral']);
             $table->enum('status',['dalam review','lulus', 'tidak lulus']);

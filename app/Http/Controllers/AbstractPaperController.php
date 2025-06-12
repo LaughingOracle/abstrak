@@ -103,7 +103,6 @@ class AbstractPaperController extends Controller
             $extractPath = storage_path('app/public/extracted/' . $title);
 
             $path = $request->file('zip_file')->store('abstract_zips');
-            $abstractPaper->file_directory = $path;
 
             File::deleteDirectory(storage_path('app/private/zips/'. $abstractPaper->title));
             File::deleteDirectory(storage_path('app/public/extracted/'. $abstractPaper->title));

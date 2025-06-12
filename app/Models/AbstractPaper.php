@@ -14,7 +14,7 @@ class AbstractPaper extends Model
     protected $fillable = [
         'title',
         'description',
-        'file_directory',
+        'reviewer',
         'topic',
         'presentation_type',
         'abstract_account_id',
