@@ -4,8 +4,9 @@
 <body>
     <h1>update abstract</h1>
     @if(session('error')) <p style="color:red;">{{ session('error') }}</p> @endif
-    <form id="myForm" action="{{ route('abstracts.update', $abstract->id) }}" method="PUT" enctype="multipart/form-data">
+    <form id="myForm" action="{{ route('abstracts.update', $abstract->id) }}" method="POST" enctype="multipart/form-data">
         @csrf
+        @method('PUT')
 
         <label for="title">title</label>
         <input type="text" name="title" id="title" value="{{ $abstract->title}}">

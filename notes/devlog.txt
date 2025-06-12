@@ -23,7 +23,7 @@ jalur rute udah nyambung semua, tinggal bikin hamlaman yang milih view. backend 
 
 
 11/06/2025
-review sistem, penambahan kolum status pada abstrak, kemungkinan pencoretan fitur oversine
+review sistem, penambahan kolum status pada abstrak
 update diagram
 perubahan besar pada navigasi user, user bisa liat daftar bastrak dia, tombol delete, dan update. front end (lol) update inget dengan pilihan sebelumnya
 backend update masih belum dikerjain
