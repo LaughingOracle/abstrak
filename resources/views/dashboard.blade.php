@@ -9,14 +9,16 @@
             </thead>
             <tbody>
                 @foreach ($uniqueReviewers as $reviewer)
-                    <tr>
-                        <td>{{ $reviewer}}</td>
-                        <td>
-                            <a href="{{ route('listing', ['name' => $reviewer]) }}">
-                                {{ route('listing', ['name' => $reviewer]) }}
-                            </a>
-                        </td>
-                    </tr>
+                    @if(!empty($reviewer))
+                        <tr>
+                            <td>{{ $reviewer }}</td>
+                            <td>
+                                <a href="{{ route('listing', ['name' => $reviewer]) }}">
+                                    {{ route('listing', ['name' => $reviewer]) }}
+                                </a>
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
             </tbody>
         </table>

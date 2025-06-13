@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AbstractPaper;
 use App\Models\Author;
 use App\Models\Presenter;
+use Illuminate\Support\Facades\Mail;
 
 class ZipUploadController extends Controller
 {
@@ -76,7 +77,7 @@ class ZipUploadController extends Controller
                     'description' => $validated['description'],
                     'topic' => $validated['topic'],
                     'presentation_type' => $validated['presentation_type'],
-                    'abstract_account_id' => 1, //placeholder untuk id dari user
+                    'abstract_account_id' => auth()->id(),
                     'presenter_id' => $presenter -> id,
                 ]);
                 
@@ -91,6 +92,28 @@ class ZipUploadController extends Controller
                     $submission->author()->attach($author->id);
                 }
             });
+            // getting presenter and user email
+            $emails = [
+                $validated['presenter_email'],
+                auth()->user()->email
+            ];
+
+            // getting authoremail
+            foreach ($validated['author_email'] as $authorEmail){
+                $emails[] = $authorEmail;
+            }
+
+            // eliminate duplicates and null/empty emails
+            $emails = array_filter(array_unique($emails), function ($email) {
+                return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+            });
+            
+            //sending mails
+            foreach ($emails as $email){
+                Mail::raw('Abstrak anda akan segera di-review', function ($message) use ($email) {
+                    $message->to($email)->subject('Test Email');
+                });
+            }
             return back()->with('success', 'File extracted successfully.');
         } else {
             return back()->with('error', 'Failed to open zip file.');
