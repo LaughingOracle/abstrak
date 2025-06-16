@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use App\Models\Event;
 
 class AbstractAccount extends Authenticatable
 {
@@ -12,6 +13,7 @@ class AbstractAccount extends Authenticatable
 
     protected $fillable = [
         'email',
+        'event_id',
         'password',
         'title',
         'full_name',
@@ -20,5 +22,10 @@ class AbstractAccount extends Authenticatable
         'institution',
         'contact_preference',
         'address',
-        ];
+    ];
+
+    public function event()
+    {
+        return $this->belongsTo(Event::class);
+    }
 }

@@ -14,3 +14,18 @@ apa bisa string di abstrak aja? x
 bikin sistem browser
     - browser admin: perlu ada sistem filter, perlu ada sistem katalog dokter, perlu ada sistem asign dokter x
     - browser dokter: perlu ada sistem procedurally generated link, perlu ada sistem lolos/tidak status dan ubah tipe presentasi x
+
+update table:
+    abstract_papers: hapus file_dir   x
+    abstract_papers: hapus topic
+    abstract_papers: tambah event_id
+    abstract_account: tambah event_id
+
+tambah table:
+    event
+        id
+        event_name
+
+    topic:
+        id_event
+        topic

@@ -11,13 +11,17 @@ use Illuminate\Support\Facades\DB;
 use App\Models\AbstractPaper;
 use App\Models\Author;
 use App\Models\Presenter;
+use App\Models\Event;
 use Illuminate\Support\Facades\Mail;
 
 class ZipUploadController extends Controller
 {
     public function showForm()
     {
-        return view('upload');
+        $topics = DB::table('topics')
+        ->where('event_id', auth()->user()->event_id)
+        ->pluck('topic');
+        return view('upload', compact('topics'));
     }
 
 
@@ -73,6 +77,7 @@ class ZipUploadController extends Controller
 
                 // Insert into `AbstractPaper` table
                 $submission = AbstractPaper::create([
+                    'event_id' => $validated['event_id'],
                     'title' => $validated['title'],
                     'description' => $validated['description'],
                     'topic' => $validated['topic'],
@@ -84,7 +89,6 @@ class ZipUploadController extends Controller
                 // Insert multiple authors
                 foreach ($validated['author_name'] as $index => $name) {
                     $author = Author::create([
-                        'submission_id' => $submission->id,
                         'name' => $name,
                         'email' => $validated['author_email'][$index],
                         'affiliation' => $validated['author_affiliation'][$index],

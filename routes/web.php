@@ -9,6 +9,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AbstractPaperController;
 use App\Http\Controllers\ClientController;
 
+
 Route::get('/', function () {
     return view('welcome');
 });
@@ -18,6 +19,13 @@ Route::get('/view/{title}', [ZipUploadController::class, 'viewFile'])->name('vie
 Route::get('/client/{name}', [ClientController::class, 'listing'])->name('listing');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
+
+Route::get('/register/{event}', [RegisterController::class, 'show'])
+    ->middleware(['guest'])
+    ->name('register.with.event');
+
+Route::post('/register/{event}', [RegisterController::class, 'store'])
+->middleware(['guest']);
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {

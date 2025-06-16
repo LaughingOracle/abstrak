@@ -8,7 +8,7 @@
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
-
+            <input type="hidden" name="event" id="event" value="{{ $event }}">
             <!-- Title -->
             <div>
                 <x-label for="title" value="Title" />

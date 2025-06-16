@@ -6,7 +6,7 @@
     @if(session('error')) <p style="color:red;">{{ session('error') }}</p> @endif
     <form id="myForm" method="POST" action="/upload" enctype="multipart/form-data">
         @csrf
-
+        <input type="hidden" name="event_id" value="{{ Auth::user()->event_id }}">
         <label for="title">title</label>
         <input type="text" name="title" id="title" required>
 
@@ -17,12 +17,12 @@
 
         <br><br>
 
-        <label for="topic">topic:</label>
+        <label for="topic">Topic:</label>
         <select id="topic" name="topic" required>
             <option value="">--Please choose an option--</option>
-            <option value="gastroentrology">gastroentrology</option>
-            <option value="hepatology">hepatology</option>
-            <option value="others(miscellaneous)">anothers(miscellaneous)ge</option>
+            @foreach ($topics as $topic)
+                <option value="{{ $topic }}">{{ ucfirst($topic) }}</option>
+            @endforeach
         </select>
 
         <br><br>
@@ -59,80 +59,62 @@
     <script>
         let count = 1;
 
-        document.getElementById('addFieldBtn').addEventListener('click', () => {
-            const container = document.getElementById('dynamicFields');
+    function createFieldGroup(author = {}) {
+        const container = document.getElementById('dynamicFields');
+        const fieldGroup = document.createElement('div');
+        fieldGroup.className = 'field-group';
+        fieldGroup.id = 'fieldGroup' + count;
 
-            // Create a wrapper div for label, input, and remove button
-            const fieldGroup = document.createElement('div');
-            fieldGroup.className = 'field-group';
-            fieldGroup.id = 'fieldGroup' + count;
+        const input = (type, name, value = '') => {
+            const input = document.createElement('input');
+            input.type = type;
+            input.name = name + '[]';
+            input.id = name + '_' + count;
+            input.value = value;
+            input.required = true;
+            return input;
+        };
 
-            // Create label
-            const labelNama = document.createElement('label');
-            labelNama.setAttribute('for', 'author_name_' + count);
-            labelNama.textContent = 'Author name: ';
+        const label = (forId, text) => {
+            const label = document.createElement('label');
+            label.setAttribute('for', forId);
+            label.textContent = text;
+            return label;
+        };
 
-            const labelEmail = document.createElement('label');
-            labelEmail.setAttribute('for', 'author_email_' + count);
-            labelEmail.textContent = 'Author email: ';
+        const br = () => document.createElement('br');
 
-            const labelAff = document.createElement('label');
-            labelAff.setAttribute('for', 'author_affiliation_' + count);
-            labelAff.textContent = 'Author affiliation: ';
+        fieldGroup.appendChild(label('author_name_' + count, 'Author name: '));
+        fieldGroup.appendChild(input('text', 'author_name', author.name || ''));
+        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
 
+        fieldGroup.appendChild(label('author_email_' + count, 'Author email: '));
+        fieldGroup.appendChild(input('text', 'author_email', author.email || ''));
+        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
 
+        fieldGroup.appendChild(label('author_affiliation_' + count, 'Author affiliation: '));
+        fieldGroup.appendChild(input('text', 'author_affiliation', author.affiliation || ''));
+        fieldGroup.appendChild(br());
 
-            // Create input
-            const inputNama = document.createElement('input');
-            inputNama.type = 'text';
-            inputNama.id = 'author_name_' + count;
-            inputNama.name = 'author_name[]';
-
-            const inputEmail = document.createElement('input');
-            inputEmail.type = 'text';
-            inputEmail.id = 'author_email_' + count;
-            inputEmail.name = 'author_email[]';
-
-            const inputAff = document.createElement('input');
-            inputAff.type = 'text';
-            inputAff.id = 'author_affiliation_' + count;
-            inputAff.name = 'author_affiliation[]';
-
-
-
-            // Create remove button
-            const removeBtn = document.createElement('button');
-            removeBtn.type = 'button';
-            removeBtn.textContent = 'Remove';
-            removeBtn.style.marginLeft = '10px';
-
-            // When remove button clicked, remove the entire field group
-            removeBtn.addEventListener('click', () => {
+        const removeBtn = document.createElement('button');
+        removeBtn.type = 'button';
+        removeBtn.textContent = 'Remove';
+        removeBtn.style.marginLeft = '10px';
+        removeBtn.addEventListener('click', () => {
             container.removeChild(fieldGroup);
-            });
-
-            // Append label, input, and remove button to the wrapper div
-            fieldGroup.appendChild(labelNama);
-            fieldGroup.appendChild(inputNama);
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(labelEmail);
-            fieldGroup.appendChild(inputEmail);
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(labelAff);
-            fieldGroup.appendChild(inputAff);
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(removeBtn);
-            //this is terrible, seeing this make me want to tie THE ROPE
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(document.createElement('br'));
-            fieldGroup.appendChild(document.createElement('br'));
-            // Append wrapper div to container
-            container.appendChild(fieldGroup);
-
-            count++;
         });
+
+        fieldGroup.appendChild(removeBtn);
+        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
+
+        container.appendChild(fieldGroup);
+        count++;
+    }
+
+    document.getElementById('addFieldBtn').addEventListener('click', () => {
+        createFieldGroup(); // Add empty input fields
+    });
+    createFieldGroup(); // or createFieldGroup({});
     </script>
 </body>
 </html>

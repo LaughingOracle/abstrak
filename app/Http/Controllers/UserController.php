@@ -11,7 +11,7 @@ class UserController extends Controller
     {
         $userId = auth()->id();
         // You can validate the role if needed here
-        $abstracts = AbstractPaper::where('abstract_account_id', $userId)->get();
+        $abstracts = AbstractPaper::where('abstract_account_id', $userId)->where('event_id',auth()->user()->event_id)->get();
 
         return view('usermenu', compact('abstracts'));
     }

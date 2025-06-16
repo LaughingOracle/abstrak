@@ -6,8 +6,8 @@ use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
-    public function show()
+    public function show($event)
     {
-        return view('register');
+        return view('auth.register', ['event' => $event]);
     }
 }

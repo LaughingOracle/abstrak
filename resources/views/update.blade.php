@@ -21,7 +21,9 @@
         <label for="topic">topic:</label>
         <select id="topic" name="topic">
             @php
-                $topics = ['gastroentrology', 'hepatology', 'others(miscellaneous)'];
+                $topics = DB::table('topics')
+                ->where('event_id', auth()->user()->event_id)
+                ->pluck('topic');
             @endphp
 
             @foreach ($topics as $topic)
@@ -89,6 +91,7 @@
             input.name = name + '[]';
             input.id = name + '_' + count;
             input.value = value;
+            input.required = true;
             return input;
         };
 

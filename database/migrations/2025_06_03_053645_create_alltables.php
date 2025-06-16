@@ -11,8 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
+        Schema::create('events', function (Blueprint $table) {
+            $table->id();
+            $table->string('event_name');
+            $table->timestamps();
+        });
+
+        Schema::create('topics', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('topic');
+            $table->timestamps();
+        });
+
+
         Schema::create('abstract_accounts', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->string('email');
             $table->string('password');
             $table->string('title');
@@ -40,15 +55,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
-
         Schema::create('abstract_papers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->foreignId('abstract_account_id')->constrained()->onDelete('cascade');
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
+            $table->string('topic');
             $table->string('description', 2048);
             $table->string('reviewer')->nullable();
-            $table->enum('topic', ['gastroentrology', 'hepatology', 'others(miscellaneous)']);
             $table->enum('presentation_type',['poster','oral']);
             $table->enum('status',['dalam review','lulus', 'tidak lulus']);
             $table->timestamps();
@@ -94,6 +109,8 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('events');
+        Schema::dropIfExists('topics');
         Schema::dropIfExists('abstract_accounts');
         Schema::dropIfExists('authors');
         Schema::dropIfExists('presenters');
