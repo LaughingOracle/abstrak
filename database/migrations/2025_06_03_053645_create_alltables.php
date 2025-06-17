@@ -58,6 +58,7 @@ return new class extends Migration
         Schema::create('abstract_papers', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('event');
             $table->foreignId('abstract_account_id')->constrained()->onDelete('cascade');
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
@@ -109,14 +110,14 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('events');
+        Schema::dropIfExists('abstract_papers');
         Schema::dropIfExists('topics');
-        Schema::dropIfExists('abstract_accounts');
-        Schema::dropIfExists('authors');
         Schema::dropIfExists('presenters');
-        Schema::dropIfExists('abstracts');
+        Schema::dropIfExists('authors');
+        Schema::dropIfExists('abstract_accounts');
         Schema::dropIfExists('abstract_paper_author');
         Schema::dropIfExists('event_accounts');
         Schema::dropIfExists('sponsors');
+        Schema::dropIfExists('events');
     }
 };

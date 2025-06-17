@@ -17,15 +17,15 @@ bikin sistem browser
 
 update table:
     abstract_papers: hapus file_dir   x
-    abstract_papers: hapus topic
-    abstract_papers: tambah event_id
-    abstract_account: tambah event_id
+    abstract_papers: hapus topic x
+    abstract_papers: tambah event_id x
+    abstract_account: tambah event_id x
 
-tambah table:
-    event
+tambah table: x
+    event x
         id
         event_name
 
-    topic:
+    topic: x
         id_event
         topic

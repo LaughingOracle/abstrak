@@ -47,6 +47,7 @@ class CreateNewUser implements CreatesNewUsers
 
         return AbstractAccount::create([
             'event_id' => $event->id,
+            'event' => $input['event'],
             'email' => $input['email'],
             'password' => Hash::make($input['password']),
             'title' => $input['title'],

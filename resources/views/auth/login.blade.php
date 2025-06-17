@@ -12,9 +12,9 @@
             </div>
         @endsession
 
-        <form method="POST" action="{{ route('login') }}">
+        <form method="POST" action="{{ route('custom.login.submit') }}">
             @csrf
-
+            <input type="hidden" name="event" id="event" value="{{ $event }}">
             <div>
                 <x-label for="email" value="{{ __('Email') }}" />
                 <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />

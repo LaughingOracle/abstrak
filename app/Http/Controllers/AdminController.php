@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-
 use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Topic;
 
 class AdminController extends Controller
 {
@@ -21,19 +21,30 @@ class AdminController extends Controller
                 $query->where('topic', $request->topic);
             }
 
+            if ($request->has('event') && $request->event) {
+                $eventModels = \App\Models\Event::where('event_name',$request->event)->first();
+                $query->where('event_id', $eventModels->id);
+            }
+
             if ($request->has('presentation_type') && $request->presentation_type) {
                 $query->where('presentation_type', $request->presentation_type);
             }
+            $topics = Topic::select('topic')->distinct()->pluck('topic');
 
-            $uniqueReviewers = AbstractPaper::select('reviewer')->distinct()->pluck('reviewer');
+            $eventLists = \App\Models\Event::select('event_name')->distinct()->pluck('event_name');
+
+            // need revision
+            $uniqueReviewers = $uniqueReviewers = AbstractPaper::where('event', $request->event)
+                ->select('reviewer')
+                ->distinct()
+                ->pluck('reviewer');
 
             $abstractPapers = $query->get();
 
-            return view('/dashboard', compact('abstractPapers', 'uniqueReviewers'));
+            return view('/dashboard', compact('abstractPapers', 'uniqueReviewers', 'topics', 'eventLists'));
         }
 
-        Auth::logout();
-        return redirect('usermenu')->with('error', 'Access denied.');
+        return redirect('usermenu');
     }
 
     public function assignReviewer(Request $request)

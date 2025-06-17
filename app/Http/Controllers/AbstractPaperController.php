@@ -66,7 +66,7 @@ class AbstractPaperController extends Controller
         $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string|max:2048',
-        'topic' => 'required|in:gastroentrology,hepatology,others(miscellaneous)',
+        'topic' => 'required|string',
         'presentation_type' => 'required|in:poster,oral',
         'zip_file' => 'required|file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
         'presenter_name' => 'required|string|max:255',

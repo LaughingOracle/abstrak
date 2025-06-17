@@ -15,6 +15,7 @@ class AbstractPaper extends Model
 
     protected $fillable = [
         'event_id',
+        'event',
         'title',
         'description',
         'reviewer',

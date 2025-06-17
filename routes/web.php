@@ -8,36 +8,47 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AbstractPaperController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\LoginController;
+use Illuminate\Support\Facades\Auth;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+//defunct, no dynamic routing in blade's href (yet)
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/view/{title}', [ZipUploadController::class, 'viewFile'])->name('view');
 
+// route for dr john doctor
 Route::get('/client/{name}', [ClientController::class, 'listing'])->name('listing');
+//Route::get('/client/{name}/{event}', [ClientController::class, 'listing'])->name('listing');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
 
+//use default register controller for POST method, *shrugs* it worked
 Route::get('/register/{event}', [RegisterController::class, 'show'])
-    ->middleware(['guest'])
     ->name('register.with.event');
+// shit aint workin, now used custom post register
+Route::post('/register', [RegisterController::class, 'store']);
 
-Route::post('/register/{event}', [RegisterController::class, 'store'])
-->middleware(['guest']);
+Route::get('/login/{event}', [LoginController::class, 'showLoginForm'])->name('custom.login');
+Route::post('/login', [LoginController::class, 'login'])->name('custom.login.submit');
+
+//not using middleware for custom guest access login rerouting (rerouting logic in controller)
+Route::get('/usermenu/{event}', [UserController::class, 'listing'])->name('usermenu');
+
 
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {
-        Route::get('/usermenu', [UserController::class, 'listing'])->name('usermenu');
         Route::get('/upload', [ZipUploadController::class, 'showForm'])->name('zip.form');
         Route::post('/upload', [ZipUploadController::class, 'handleUpload'])->name('zip.upload');
         Route::post('/update', [ZipUploadController::class, 'handleUpdate'])->name('zip.update');
 
-        Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
-        Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('insertReviewer');
-
         Route::resource('abstracts', AbstractPaperController::class);
     });
-Route::get('/', [HomeController::class, 'index'])->name('home');
 
+Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
+Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('insertReviewer');
+
+//dev note: i know this code is fucking terrible(i only wrote terrible code),
+//but the app scale mid dev (thank got its not post production).
+//there's really should've a uniform software proposal document template 
+//(like idunno, a flow diagram, theres one btw, i made that, thats why its sucked)

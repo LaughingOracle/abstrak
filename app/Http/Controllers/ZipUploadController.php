@@ -31,7 +31,7 @@ class ZipUploadController extends Controller
         $validated = $request->validate([
         'title' => 'required|string|max:255',
         'description' => 'required|string|max:2048',
-        'topic' => 'required|in:gastroentrology,hepatology,others(miscellaneous)',
+        'topic' => 'required|string',
         'presentation_type' => 'required|in:poster,oral',
         'zip_file' => 'required|file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
         'presenter_name' => 'required|string|max:255',
@@ -61,6 +61,10 @@ class ZipUploadController extends Controller
             mkdir($extractPath, 0777, true);
         }
 
+        $eventName = DB::table('events')
+                ->where('id', auth()->user()->event_id)
+                ->value('event_name');
+
         $zip = new ZipArchive;
         if ($zip->open(storage_path("app/private/{$storedPath}")) === true) {
             $zip->extractTo($extractPath);
@@ -74,10 +78,14 @@ class ZipUploadController extends Controller
                     'email' => $validated['presenter_email'],
                 ]);
 
+                $eventName = DB::table('events')
+                ->where('id', auth()->user()->event_id)
+                ->value('event_name');
 
                 // Insert into `AbstractPaper` table
                 $submission = AbstractPaper::create([
-                    'event_id' => $validated['event_id'],
+                    'event_id' => auth()->user()->event_id,
+                    'event' => $eventName,
                     'title' => $validated['title'],
                     'description' => $validated['description'],
                     'topic' => $validated['topic'],
@@ -118,9 +126,9 @@ class ZipUploadController extends Controller
                     $message->to($email)->subject('Test Email');
                 });
             }
-            return back()->with('success', 'File extracted successfully.');
+            return redirect()->route('usermenu', ['event' => $eventName])->with('success', 'File uploaded successfully.');
         } else {
-            return back()->with('error', 'Failed to open zip file.');
+            return redirect()->route('usermenu', ['event' => $eventName])->with('error', 'Failed to open zip file.');
         }
 
     }
