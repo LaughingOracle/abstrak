@@ -5,9 +5,18 @@
 </head>
 <body>
     <h1>User: {{ auth()->user()->username }}</h1>
+
+    @auth
+        @if (Auth::user()->email === 'admin@gmail.com')
+            <!-- Admin-only content here -->
+            <p>Welcome, Admin!</p>
+            <a href="{{ route('dashboard' )}}">dashboard</a>
+            <br> <br>
+        @endif
+    @endauth
+
     <a href="{{ route('zip.form') }}">Submit Abstract</a>
     <br>
-
     @if($abstracts->isEmpty())
         <p>No abstract found.</p>
     @else

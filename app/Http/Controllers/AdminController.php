@@ -41,7 +41,6 @@ class AdminController extends Controller
 
             return view('/dashboard', compact('abstractPapers', 'uniqueReviewers', 'topics', 'eventLists'));
         }
-        session(['url.intended' => url()->full()]);
         return redirect()->route('custom.login', ['event' => 'admin_event']);
     }
 
