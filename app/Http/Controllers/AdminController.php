@@ -14,7 +14,6 @@ class AdminController extends Controller
     public function index(Request $request)
     {
         $user = Auth::user();
-
         if ($user && $user->email === 'admin@gmail.com') {
             $query = AbstractPaper::query();
 
@@ -42,8 +41,8 @@ class AdminController extends Controller
 
             return view('/dashboard', compact('abstractPapers', 'uniqueReviewers', 'topics', 'eventLists'));
         }
-
-        return redirect('usermenu');
+        session(['url.intended' => url()->full()]);
+        return redirect()->route('custom.login', ['event' => 'admin_event']);
     }
 
     public function assignReviewer(Request $request)

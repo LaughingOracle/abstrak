@@ -57,7 +57,7 @@ class ZipUploadController extends Controller
         $filename = $file->getClientOriginalName();
         $storedPath = $file->storeAs("zips/$eventName/$title", $filename);
 
-        $extractPath = storage_path('app/public/extracted/'. $eventName. '/' . $title);
+        $extractPath = storage_path('app/public/extracted/'. $eventName .  '/' . $title);
 
         if (!file_exists($extractPath)) {
             mkdir($extractPath, 0777, true);

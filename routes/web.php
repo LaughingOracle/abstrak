@@ -52,3 +52,5 @@ Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('ins
 //but the app scale mid dev (thank got its not post production).
 //there's really should've a uniform software proposal document template 
 //(like idunno, a flow diagram, theres one btw, i made that, thats why its sucked)
+
+//shoutout to aork123 for letting me stay in Goonswarm after not log-in for 6 months
