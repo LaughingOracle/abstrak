@@ -32,3 +32,17 @@ backend update masih belum dikerjain
 backend update udah jalan
 dashboad 100% operational (ui minimal, tapi menurut w udah cukup bagus ¯\_(ツ)_/¯)
 backend klien 90%. kurang lebih jadi, tinggal smtp
+
+17/06/2025
+jumat dan senin ke-skip karena sibuk, tldr, perubahan rencana, skala projek naik. sekarang jadi general purpose, perlu multi account
+sekarang backend sekitar 80% (rada nyebelin 5 hari kemudian turun 10% eh?)
+sisi user udah *seharusnya* support multi-event scenario. tinggal refine ui admin (karena belum support multi-event 100%)
+kabar baiknya cuma pelu desain UI usermenu, insert&update abstrak, client, dan folder view
+
+// untuk besok
+                //$uniqueReviewers = AbstractPaper::where('event', $request->event)
+                //    ->select('event', 'reviewer')
+                //    ->distinct()
+                //    ->pluck('reviewer', 'event');
+                //
+                // cek: https://chatgpt.com/c/68512cc9-f9f0-8008-a01c-f7adfb7ad68b

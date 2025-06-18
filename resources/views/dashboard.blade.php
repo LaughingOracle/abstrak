@@ -14,6 +14,8 @@
     <div class="container mt-4">
         <h3>filtering tools: </h3>
 
+        <p> Dev note: Tolong baca dokumentasi yang disediakan sebelum event </P>
+
         <!-- Filter Form -->
         <form method="GET" action="dashboard" class="mb-4">
             <div class="row">
@@ -22,7 +24,12 @@
                     <select name="topic" id="topic" class="form-control">
                         <option value="">-- All Topics --</option>
                         @foreach ($topics as $topic)
-                            <option value="{{ $topic }}">{{ ucfirst($topic) }}</option>
+
+                            <option value="{{ $topic }}" {{ request('topic') == $topic ? 'selected' : '' }}>
+                                {{ ucfirst($topic) }}
+                            </option>
+
+
                         @endforeach
                     </select>
                 </div>
@@ -32,7 +39,9 @@
                     <select name="event" id="event" class="form-control">
                         <option value="">-- All Event --</option>
                         @foreach ($eventLists as $eventList)
-                            <option value="{{ $eventList }}">{{ ucfirst($eventList) }}</option>
+                            <option value="{{ $eventList }}" {{ request('event') == $eventList ? 'selected' : '' }}>
+                                {{ ucfirst($eventList) }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
@@ -89,21 +98,24 @@
             </table>
         </form>
         <br>
+
         <table border="1" cellpadding="8" cellspacing="0">
             <thead>
                 <tr>
+                    <th>Event</th>
                     <th>Reviewer</th>
-                    <th>URL</th>
+                    <th>Url</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($uniqueReviewers as $reviewer)
-                    @if(!empty($reviewer))
+                @foreach($uniqueReviewers as $row)
+                    @if(!is_null($row->event) && !is_null($row->reviewer))
                         <tr>
-                            <td>{{ $reviewer }}</td>
+                            <td>{{ $row->event }}</td>
+                            <td>{{ $row->reviewer }}</td>
                             <td>
-                                <a href="{{ route('listing', ['name' => $reviewer]) }}">
-                                    {{ route('listing', ['name' => $reviewer]) }}
+                                <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
+                                    {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
                                 </a>
                             </td>
                         </tr>

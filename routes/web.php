@@ -15,10 +15,10 @@ use Illuminate\Support\Facades\Auth;
 //defunct, no dynamic routing in blade's href (yet)
 Route::get('/home', [HomeController::class, 'index'])->name('home');
 
-Route::get('/view/{title}', [ZipUploadController::class, 'viewFile'])->name('view');
+Route::get('/view/{event}/{title}', [ZipUploadController::class, 'viewFile'])->name('view');
 
 // route for dr john doctor
-Route::get('/client/{name}', [ClientController::class, 'listing'])->name('listing');
+Route::get('/client/{event}/{name}', [ClientController::class, 'listing'])->name('listing');
 //Route::get('/client/{name}/{event}', [ClientController::class, 'listing'])->name('listing');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');

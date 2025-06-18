@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Topic;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -34,12 +35,10 @@ class AdminController extends Controller
             $eventLists = \App\Models\Event::select('event_name')->distinct()->pluck('event_name');
 
             // need revision
-            $uniqueReviewers = $uniqueReviewers = AbstractPaper::where('event', $request->event)
-                ->select('reviewer')
-                ->distinct()
-                ->pluck('reviewer');
-
+            
             $abstractPapers = $query->get();
+            
+            $uniqueReviewers = $query->select('reviewer', 'event')->distinct()->get();
 
             return view('/dashboard', compact('abstractPapers', 'uniqueReviewers', 'topics', 'eventLists'));
         }

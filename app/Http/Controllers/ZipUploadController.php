@@ -48,22 +48,20 @@ class ZipUploadController extends Controller
         'author_affiliation.*' => 'required|string|max:255',
         ]);
 
-
+        $eventName = DB::table('events')
+                ->where('id', auth()->user()->event_id)
+                ->value('event_name');
 
         $file = $request->file('zip_file');
         $title = $request->input('title');
         $filename = $file->getClientOriginalName();
-        $storedPath = $file->storeAs("zips/$title", $filename);
+        $storedPath = $file->storeAs("zips/$eventName/$title", $filename);
 
-        $extractPath = storage_path('app/public/extracted/' . $title);
+        $extractPath = storage_path('app/public/extracted/'. $eventName. '/' . $title);
 
         if (!file_exists($extractPath)) {
             mkdir($extractPath, 0777, true);
         }
-
-        $eventName = DB::table('events')
-                ->where('id', auth()->user()->event_id)
-                ->value('event_name');
 
         $zip = new ZipArchive;
         if ($zip->open(storage_path("app/private/{$storedPath}")) === true) {
@@ -133,18 +131,20 @@ class ZipUploadController extends Controller
 
     }
 
-    public function viewFile(Request $request, $title)
+    public function viewFile(Request $request, $event ,$title)
     {
-        $request->merge(['title' => $title]);
+        $request->merge([ 'event' => $event, 'title' => $title]);
         $request->validate([
-            'title' => 'required|string|max:255'
-        ]); // receive 'name' input from request
+            'title' => 'required',
+            'event' => 'required'
+        ]); // receive 'title, event' input from request
         $title = $request->input('title');
-
+        $event = $request->input('event');
         //$storage = Storage::allFiles($fullPath);
-        $storage = Storage::disk('public')->allFiles("extracted/{$title}");
+        $storage = Storage::disk('public')->allFiles("/extracted/{$event}/{$title}");
         
         $data = array(
+            'event' => $event,
             'title' => $title,
             'files' => $storage,
         );

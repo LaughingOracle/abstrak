@@ -15,8 +15,8 @@ use App\Models\AbstractAccount;
 class ClientController extends Controller
 {
     //
-    public function listing(Request $request, $name){
-        $abstractPapers = AbstractPaper::where('reviewer', $name)->get();
+    public function listing(Request $request, $event, $name){
+        $abstractPapers = AbstractPaper::where('event', $event)->where('reviewer', $name)->get();
 
         return view('abstractReview')->with('abstractPapers', $abstractPapers);
     }

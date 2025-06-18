@@ -16,7 +16,7 @@
                 <td>{{ $paper->topic }}</td>
                 <td>{{ $paper->reviewer }}</td>
                 <td>
-                    <a href="{{ route('view', ['title' => $paper->title]) }}">
+                    <a href="{{ route('view', ['event' => $paper->event, 'title' => $paper->title]) }}">
                         file
                     </a>
                 </td>

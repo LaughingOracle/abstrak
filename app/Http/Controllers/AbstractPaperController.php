@@ -85,6 +85,8 @@ class AbstractPaperController extends Controller
 
         $abstractPaper = AbstractPaper::findOrFail($id);
 
+        $eventName = $abstractPaper->event;
+        
         DB::transaction(function () use ($validated, $request, $abstractPaper) {
 
             // Update Presenter
@@ -100,19 +102,20 @@ class AbstractPaperController extends Controller
             $title = $request->input('title');
             $filename = $file->getClientOriginalName();
 
-            $extractPath = storage_path('app/public/extracted/' . $title);
+            $eventName = DB::table('events')
+                ->where('id', auth()->user()->event_id)
+                ->value('event_name');
 
-            $path = $request->file('zip_file')->store('abstract_zips');
+            $extractPath = storage_path('app/public/extracted/'. $eventName . '/' . $title);
 
-            File::deleteDirectory(storage_path('app/private/zips/'. $abstractPaper->title));
-            File::deleteDirectory(storage_path('app/public/extracted/'. $abstractPaper->title));
+            File::deleteDirectory(storage_path('app/private/zips/'. $eventName .'/'. $abstractPaper->title));
+            File::deleteDirectory(storage_path('app/public/extracted/'. $eventName .'/'. $abstractPaper->title));
 
             //extraction
-            $storedPath = $file->storeAs("zips/$title", $filename);
+            $storedPath = $file->storeAs("zips/$eventName/$title", $filename);
             $zip->open(storage_path("app/private/{$storedPath}"));
             $zip->extractTo($extractPath);
             $zip->close();
-            
 
             // Update Abstract Paper
             $abstractPaper->update([
@@ -147,13 +150,15 @@ class AbstractPaperController extends Controller
             // Detach old and attach new authors
             $abstractPaper->author()->sync($authorIds);
         });
-        return redirect()->route('usermenu');
+        return redirect()->route('usermenu', ['event' => $eventName]);
     }
      
     public function destroy(string $id)
     {
         // Find the abstract by ID
         $abstract = AbstractPaper::findOrFail($id);
+
+        $eventName = $abstract->event;
 
         $presenter = Presenter::findOrFail($abstract->presenter_id);
         
@@ -171,11 +176,11 @@ class AbstractPaperController extends Controller
 
         Author::destroy($author);
 
-        File::deleteDirectory(storage_path('app/private/zips/'. $abstract->title));
+        File::deleteDirectory(storage_path('app/private/zips/' . $eventName . '/'. $abstract->title));
 
-        File::deleteDirectory(storage_path('app/public/extracted/'. $abstract->title));
+        File::deleteDirectory(storage_path('app/public/extracted/' . $eventName . '/'. $abstract->title));
 
         // Redirect back with a success message
-        return redirect()->route('usermenu');
+        return redirect()->route('usermenu', ['event' => $eventName]);
     }
 }
