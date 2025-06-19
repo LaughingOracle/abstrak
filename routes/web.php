@@ -13,13 +13,12 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ForgotPasswordController;
 
 //defunct, no dynamic routing in blade's href (yet)
-Route::get('/home', [HomeController::class, 'index'])->name('home');
+//Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 Route::get('/view/{event}/{title}', [ZipUploadController::class, 'viewFile'])->name('view');
 
 // route for dr john doctor
 Route::get('/client/{event}/{name}', [ClientController::class, 'listing'])->name('listing');
-//Route::get('/client/{name}/{event}', [ClientController::class, 'listing'])->name('listing');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
 
@@ -43,8 +42,9 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
         Route::post('/update', [ZipUploadController::class, 'handleUpdate'])->name('zip.update');
 
         Route::resource('abstracts', AbstractPaperController::class);
-    });
+});
 
+// there's a custom admin email n password check insideall the dashboard route (VERY unoptimized)
 Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('insertReviewer');
 Route::post('/dashboard/event', [AdminController::class, 'assignEvent'])->name('assignEvent');
@@ -57,7 +57,7 @@ Route::post('/forgot-password/{event}', [ForgotPasswordController::class, 'sendR
 Route::get('/reset-password/{token}/{event}', [ForgotPasswordController::class, 'showResetForm'])->name('custom.password.reset');
 Route::post('/reset-password/{event}', [ForgotPasswordController::class, 'resetPassword']);
 
-//dev note: i know this code is fucking terrible(i only wrote terrible code),
+//dev note: i know this code is fucking terrible(i exclusively wrote terrible code),
 //but the app scale mid dev (thank got its not post production).
 //there's really should've a uniform software proposal document template 
 //(like idunno, a flow diagram, theres one btw, i made that, thats why its sucked)

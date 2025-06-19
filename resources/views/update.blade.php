@@ -1,6 +1,77 @@
 <!DOCTYPE html>
 <html>
-<head><title>Upload Zip</title></head>
+<head><title>Upload Zip</title>
+
+<style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f4f7fa;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        select,
+        input[type="file"] {
+            border-radius: 5px;
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            resize: none;
+            border-radius: 5px;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .field-group {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .field-group button {
+            background: #e74c3c;
+        }
+        .field-group button:hover {
+            background: #c0392b;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
     <h1>update abstract</h1>
     @if(session('error')) <p style="color:red;">{{ session('error') }}</p> @endif
@@ -14,7 +85,8 @@
         <br><br>
 
         <label for="description">description</label>
-        <input type="text" name="description" id="description" value="{{ $abstract->description}}">
+        <textarea id="description" name="description" id="description" required> {{ $abstract->description}} </textarea>
+        
 
         <br><br>
 

@@ -1,23 +1,95 @@
 <!DOCTYPE html>
 <html>
-<head><title>Upload Zip</title></head>
+<head>
+    <title>Upload Zip</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #f4f7fa;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        select,
+        input[type="file"] {
+            border-radius: 5px;
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+        textarea {
+            width: 100%;
+            height: 150px;
+            resize: none;
+            border-radius: 5px;
+            padding: 8px;
+            margin-top: 5px;
+            box-sizing: border-box;
+        }
+
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .field-group {
+            border: 1px solid #ccc;
+            padding: 15px;
+            margin-top: 20px;
+            border-radius: 5px;
+            background: #fff;
+        }
+        .field-group button {
+            background: #e74c3c;
+        }
+        .field-group button:hover {
+            background: #c0392b;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
 <body>
-    <h1>Upload a ZIP File</h1>
-    @if(session('error')) <p style="color:red;">{{ session('error') }}</p> @endif
+    <h1>Upload an Abstract</h1>
+
+    @if(session('error'))
+        <p class="error">{{ session('error') }}</p>
+    @endif
+
     <form id="myForm" method="POST" action="/upload" enctype="multipart/form-data">
         @csrf
         <input type="hidden" name="event_id" value="{{ Auth::user()->event_id }}">
-        <label for="title">title</label>
+
+        <label for="title">Title</label>
         <input type="text" name="title" id="title" required>
 
-        <br><br>
-
-        <label for="description">description</label>
-        <input type="text" name="description" id="description" required>
-
-        <br><br>
-
-        <label for="topic">Topic:</label>
+        <label for="description">Description</label>
+        <textarea id="description" name="description" id="description" required></textarea>
+        
+        <label for="topic">Topic</label>
         <select id="topic" name="topic" required>
             <option value="">--Please choose an option--</option>
             @foreach ($topics as $topic)
@@ -25,96 +97,80 @@
             @endforeach
         </select>
 
-        <br><br>
-
-        <label for="presentation_type">presentation type:</label>
+        <label for="presentation_type">Presentation Type</label>
         <select id="presentation_type" name="presentation_type" required>
             <option value="">--Please choose an option--</option>
-            <option value="poster">poster</option>
-            <option value="oral">oral</option>
+            <option value="poster">Poster</option>
+            <option value="oral">Oral</option>
         </select>
 
-        <br><br>
-
+        <label for="zip_file">ZIP File</label>
         <input type="file" name="zip_file" required>
 
-        <br><br><br>
-
-        <label for="presenter_name">Presenter name</label>
+        <label for="presenter_name">Presenter Name</label>
         <input type="text" name="presenter_name" id="presenter_name" required>
 
-        <br><br>
-
-        <label for="presenter_email">Presenter email</label>
+        <label for="presenter_email">Presenter Email</label>
         <input type="text" name="presenter_email" id="presenter_email" required>
 
-        <br><br><br>
-
         <div id="dynamicFields"></div>
-        <button type="button" id="addFieldBtn">Add author</button>
+        <button type="button" id="addFieldBtn">Add Author</button>
 
-        <br><br>
         <button type="submit" value="submit">Submit</button>
     </form>
+
     <script>
         let count = 1;
 
-    function createFieldGroup(author = {}) {
-        const container = document.getElementById('dynamicFields');
-        const fieldGroup = document.createElement('div');
-        fieldGroup.className = 'field-group';
-        fieldGroup.id = 'fieldGroup' + count;
+        function createFieldGroup(author = {}) {
+            const container = document.getElementById('dynamicFields');
+            const fieldGroup = document.createElement('div');
+            fieldGroup.className = 'field-group';
+            fieldGroup.id = 'fieldGroup' + count;
 
-        const input = (type, name, value = '') => {
-            const input = document.createElement('input');
-            input.type = type;
-            input.name = name + '[]';
-            input.id = name + '_' + count;
-            input.value = value;
-            input.required = true;
-            return input;
-        };
+            const input = (type, name, value = '') => {
+                const input = document.createElement('input');
+                input.type = type;
+                input.name = name + '[]';
+                input.id = name + '_' + count;
+                input.value = value;
+                input.required = true;
+                return input;
+            };
 
-        const label = (forId, text) => {
-            const label = document.createElement('label');
-            label.setAttribute('for', forId);
-            label.textContent = text;
-            return label;
-        };
+            const label = (forId, text) => {
+                const label = document.createElement('label');
+                label.setAttribute('for', forId);
+                label.textContent = text;
+                return label;
+            };
 
-        const br = () => document.createElement('br');
+            fieldGroup.appendChild(label('author_name_' + count, 'Author Name'));
+            fieldGroup.appendChild(input('text', 'author_name', author.name || ''));
 
-        fieldGroup.appendChild(label('author_name_' + count, 'Author name: '));
-        fieldGroup.appendChild(input('text', 'author_name', author.name || ''));
-        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
+            fieldGroup.appendChild(label('author_email_' + count, 'Author Email'));
+            fieldGroup.appendChild(input('text', 'author_email', author.email || ''));
 
-        fieldGroup.appendChild(label('author_email_' + count, 'Author email: '));
-        fieldGroup.appendChild(input('text', 'author_email', author.email || ''));
-        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
+            fieldGroup.appendChild(label('author_affiliation_' + count, 'Author Affiliation'));
+            fieldGroup.appendChild(input('text', 'author_affiliation', author.affiliation || ''));
 
-        fieldGroup.appendChild(label('author_affiliation_' + count, 'Author affiliation: '));
-        fieldGroup.appendChild(input('text', 'author_affiliation', author.affiliation || ''));
-        fieldGroup.appendChild(br());
+            const removeBtn = document.createElement('button');
+            removeBtn.type = 'button';
+            removeBtn.textContent = 'Remove';
+            removeBtn.addEventListener('click', () => {
+                container.removeChild(fieldGroup);
+            });
 
-        const removeBtn = document.createElement('button');
-        removeBtn.type = 'button';
-        removeBtn.textContent = 'Remove';
-        removeBtn.style.marginLeft = '10px';
-        removeBtn.addEventListener('click', () => {
-            container.removeChild(fieldGroup);
+            fieldGroup.appendChild(removeBtn);
+            container.appendChild(fieldGroup);
+            count++;
+        }
+
+        document.getElementById('addFieldBtn').addEventListener('click', () => {
+            createFieldGroup();
         });
 
-        fieldGroup.appendChild(removeBtn);
-        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
-
-        container.appendChild(fieldGroup);
-        count++;
-    }
-
-    document.getElementById('addFieldBtn').addEventListener('click', () => {
-        createFieldGroup(); // Add empty input fields
-    });
-    createFieldGroup(); // or createFieldGroup({});
+        createFieldGroup(); // Initialize with one set
     </script>
 </body>
 </html>
