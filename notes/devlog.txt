@@ -39,10 +39,6 @@ sekarang backend sekitar 80% (rada nyebelin 5 hari kemudian turun 10% eh?)
 sisi user udah *seharusnya* support multi-event scenario. tinggal refine ui admin (karena belum support multi-event 100%)
 kabar baiknya cuma pelu desain UI usermenu, insert&update abstrak, client, dan folder view
 
-// untuk besok
-                //$uniqueReviewers = AbstractPaper::where('event', $request->event)
-                //    ->select('event', 'reviewer')
-                //    ->distinct()
-                //    ->pluck('reviewer', 'event');
-                //
-                // cek: https://chatgpt.com/c/68512cc9-f9f0-8008-a01c-f7adfb7ad68b
+18/06/2025
+extensive debugging: dashborad workflow changed, deleted remember me box (break on use), forgot password WIP, fixed file deletetion upon update,
+better file structure for multi-event feature, fixed already register routing

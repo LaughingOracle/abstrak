@@ -5,6 +5,11 @@
         </x-slot>
 
         <x-validation-errors class="mb-4" />
+        @if (session('warning'))
+            <div class="mb-4 text-sm text-red-600">
+                {{ session('warning') }}
+            </div>
+        @endif
 
         <form method="POST" action="{{ route('register') }}">
             @csrf
