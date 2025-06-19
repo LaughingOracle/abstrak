@@ -11,6 +11,7 @@ class Topic extends Model
     use HasFactory;
 
     protected $fillable = [
+        'event_id',
         'topic'
     ];
 

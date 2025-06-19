@@ -29,3 +29,8 @@ tambah table: x
     topic: x
         id_event
         topic
+
+
+
+
+i dunno, tombol tambah event dan topik, trus ui?

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Topic;
+use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
@@ -31,7 +32,7 @@ class AdminController extends Controller
             }
             $topics = Topic::select('topic')->distinct()->pluck('topic');
 
-            $eventLists = \App\Models\Event::select('event_name')->distinct()->pluck('event_name');
+            $eventLists = Event::select('event_name')->distinct()->pluck('event_name');
 
             // need revision
             
@@ -44,17 +45,61 @@ class AdminController extends Controller
         return redirect()->route('custom.login', ['event' => 'admin_event']);
     }
 
+    public function assignEvent(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && $user->email === 'admin@gmail.com') {
+            $request->validate([
+                'event' => 'required|string|max:255',
+            ]);
+
+            Event::create(['event_name' => $request->event]);
+
+            return redirect()->route('dashboard')->with('success', 'event assigned successfully.');
+        }else{
+            return redirect()->route('custom.login', ['event' => 'admin_event']);
+        }
+    }
+
+    public function assignTopic(Request $request)
+    {
+        $user = Auth::user();
+        if ($user && $user->email === 'admin@gmail.com') {
+            $request->validate([
+                'event' => 'required|string|max:255',
+                'topic' => 'required|string|max:255',
+            ]);
+
+            $eventModels = Event::where('event_name',$request->event)->first();
+
+            Topic::create([
+                'event_id' => $eventModels->id,
+                'topic' => $request->topic,
+            ]);
+
+            return redirect()->route('dashboard')->with('success', 'topic assigned successfully.');
+        } else{
+            return redirect()->route('custom.login', ['event' => 'admin_event']);
+        }
+    }
+
     public function assignReviewer(Request $request)
     {
-        $request->validate([
-            'reviewer' => 'required|string|max:255',
-            'selected_ids' => 'required|array',
-        ]);
+        $user = Auth::user();
+        if ($user && $user->email === 'admin@gmail.com') {
 
-        AbstractPaper::whereIn('id', $request->selected_ids)
-            ->update(['reviewer' => $request->reviewer]);
+            $request->validate([
+                'reviewer' => 'required|string|max:255',
+                'selected_ids' => 'required|array',
+            ]);
 
-        return redirect()->route('dashboard')->with('success', 'Reviewer assigned successfully.');
+            AbstractPaper::whereIn('id', $request->selected_ids)
+                ->update(['reviewer' => $request->reviewer]);
+
+            return redirect()->route('dashboard')->with('success', 'Reviewer assigned successfully.');
+        } else{
+            return redirect()->route('custom.login', ['event' => 'admin_event']);
+        }
     }
 
 }

@@ -47,6 +47,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 
 Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('insertReviewer');
+Route::post('/dashboard/event', [AdminController::class, 'assignEvent'])->name('assignEvent');
+Route::post('/dashboard/topic', [AdminController::class, 'assignTopic'])->name('assignTopic');
 
 
 Route::get('/forgot-password/{event}', [ForgotPasswordController::class, 'showRequestForm'])->name('custom.password.request');
@@ -54,7 +56,6 @@ Route::post('/forgot-password/{event}', [ForgotPasswordController::class, 'sendR
 
 Route::get('/reset-password/{token}/{event}', [ForgotPasswordController::class, 'showResetForm'])->name('custom.password.reset');
 Route::post('/reset-password/{event}', [ForgotPasswordController::class, 'resetPassword']);
-
 
 //dev note: i know this code is fucking terrible(i only wrote terrible code),
 //but the app scale mid dev (thank got its not post production).

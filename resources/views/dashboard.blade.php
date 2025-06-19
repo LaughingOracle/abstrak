@@ -8,14 +8,39 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-
-
-
     <div class="container mt-4">
-        <h3>filtering tools: </h3>
-
+        <h3> add event/topic</h3>
         <p> Dev note: Tolong baca dokumentasi yang disediakan sebelum event </P>
+        <form method="POST" action=" {{route('assignEvent')}} ">
+            @csrf
+            <div class="mb-3">
+                <label for="event">Assign event:</label>
+                <input type="text" name="event" id="add_event" required>
+                <button type="submit" class="btn btn-primary mt-2">Assign event</button>
+            </div>
+        </form>
 
+        <form method="POST" action=" {{route('assignTopic')}} ">
+            @csrf
+
+            <div style="all: unset;">
+                <label for="topic">Assign topic:</label>
+                <input type="text" name="topic" id="add_topic" required>
+                <label for="event">Filter by Event:</label>
+                <select name="event" id="event" required>
+                    <option value="">-- Unselected --</option>
+                    @foreach ($eventLists as $eventList)
+                        <option value="{{ $eventList }}" {{ request('event') == $eventList ? 'selected' : '' }}>
+                            {{ ucfirst($eventList) }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Assign topic</button>
+            </div>
+        </form>
+
+        <hr>
+        <h3>filtering tools: </h3>
         <!-- Filter Form -->
         <form method="GET" action="dashboard" class="mb-4">
             <div class="row">
