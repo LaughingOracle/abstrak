@@ -17,22 +17,32 @@ class AdminController extends Controller
         $user = Auth::user();
         if ($user && $user->email === 'admin@gmail.com') {
             $query = AbstractPaper::query();
+            $topicQuery = Topic::query();
+
+            $eventLists = Event::select('event_name')->distinct()->pluck('event_name');
 
             if ($request->has('topic') && $request->topic) {
                 $query->where('topic', $request->topic);
-            }
+                $eventList2 = DB::table('topics')
+                    ->join('events', 'topics.event_id', '=', 'events.id')
+                    ->where('topic', $request->topic)
+                    ->select('event_name')
+                    ->distinct()
+                    ->pluck('event_name');
 
+                $eventLists = $eventList2;
+
+            }
             if ($request->has('event') && $request->event) {
-                $eventModels = \App\Models\Event::where('event_name',$request->event)->first();
+                $eventModels = Event::where('event_name',$request->event)->first();
                 $query->where('event_id', $eventModels->id);
+                $topicQuery->where('event_id', $eventModels->id);   
             }
 
             if ($request->has('presentation_type') && $request->presentation_type) {
                 $query->where('presentation_type', $request->presentation_type);
             }
-            $topics = Topic::select('topic')->distinct()->pluck('topic');
-
-            $eventLists = Event::select('event_name')->distinct()->pluck('event_name');
+            $topics = $topicQuery->select('topic')->distinct()->pluck('topic');
 
             // need revision
             
@@ -53,9 +63,13 @@ class AdminController extends Controller
                 'event' => 'required|string|max:255',
             ]);
 
+
+            if(! Event::where('event_name',$request->event)->first() ){
             Event::create(['event_name' => $request->event]);
 
-            return redirect()->route('dashboard')->with('success', 'event assigned successfully.');
+            return redirect()->route('dashboard')->with('success', 'event assigned successfully.');                
+            }
+            return redirect()->route('dashboard')->with('error', 'duplicate detected.');
         }else{
             return redirect()->route('custom.login', ['event' => 'admin_event']);
         }
@@ -72,12 +86,15 @@ class AdminController extends Controller
 
             $eventModels = Event::where('event_name',$request->event)->first();
 
-            Topic::create([
-                'event_id' => $eventModels->id,
-                'topic' => $request->topic,
-            ]);
 
-            return redirect()->route('dashboard')->with('success', 'topic assigned successfully.');
+            if(! Topic::where('topic',$request->topic)->where('event_id', $eventModels->id)->first() ){
+                Topic::create([
+                    'event_id' => $eventModels->id,
+                    'topic' => $request->topic,
+                ]);
+                return redirect()->route('dashboard')->with('success', 'topic assigned successfully.');
+            }
+            return redirect()->route('dashboard')->with('error', 'duplicate detected.');
         } else{
             return redirect()->route('custom.login', ['event' => 'admin_event']);
         }
