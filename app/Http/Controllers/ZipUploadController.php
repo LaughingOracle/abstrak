@@ -131,21 +131,27 @@ class ZipUploadController extends Controller
 
     }
 
-    public function viewFile(Request $request, $event ,$title)
+    public function viewFile(Request $request, $id)
     {
-        $request->merge([ 'event' => $event, 'title' => $title]);
+        $request->merge([ 'id' => $id]);
         $request->validate([
-            'title' => 'required',
-            'event' => 'required'
-        ]); // receive 'title, event' input from request
-        $title = $request->input('title');
-        $event = $request->input('event');
-        //$storage = Storage::allFiles($fullPath);
-        $storage = Storage::disk('public')->allFiles("/extracted/{$event}/{$title}");
+            'id' => 'required'
+        ]); // receive 'id' input from request
+        $id = $request->input('id');
+
+        $abstract = AbstractPaper::findOrFail($id);
+
+        $eventName = DB::table('events')
+                ->where('id', $abstract->event_id)
+                ->value('event_name');
+
+        $storage = Storage::disk('public')->allFiles("/extracted/{$eventName}/{$abstract->title}");
+
         
         $data = array(
-            'event' => $event,
-            'title' => $title,
+            'event' => $eventName,
+            'description' => $abstract->description,
+            'title' => $abstract->title,
             'files' => $storage,
         );
 

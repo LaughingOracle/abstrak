@@ -33,4 +33,4 @@ tambah table: x
 
 
 
-i dunno, tombol tambah event&topic(x) dan topik, trus ui?
+i dunno, tombol tambah event&topic(x) dan topik, trus ui? x

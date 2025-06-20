@@ -42,3 +42,10 @@ kabar baiknya cuma pelu desain UI usermenu, insert&update abstrak, client, dan f
 18/06/2025
 extensive debugging: dashborad workflow changed, deleted remember me box (break on use), forgot password WIP, fixed file deletetion upon update,
 better file structure for multi-event feature, fixed already register routing
+
+
+19/06/25
+fitur forgot password fungsional. fix multi register conflict, fitur asign event dan topic, user gui, doctor gui (tinggal file browsing)
+
+20/06/25
+ui dokter jadi. perubahan rute view, jadi pake id

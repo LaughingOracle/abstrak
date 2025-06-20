@@ -106,6 +106,10 @@
 
         <label for="zip_file">ZIP File</label>
         <input type="file" name="zip_file" required>
+        <p style="font-size: 0.9em; color: #555; margin-top: 1em;">
+            📁 Please compress your files into a <strong>.zip (not rar)</strong> archive with a maximum of 8 megabytes before uploading.  
+            For best results, use supported formats like <strong>.pdf</strong>, <strong>.jpg</strong>, <strong>.mp4</strong>, or <strong>.txt</strong> inside the archive.
+        </p>
 
         <label for="presenter_name">Presenter Name</label>
         <input type="text" name="presenter_name" id="presenter_name" required>
