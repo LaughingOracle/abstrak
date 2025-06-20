@@ -118,6 +118,7 @@
                     <th>#</th>
                     <th>Title</th>
                     <th>Topic</th>
+                    <th>File</th>
                     <th>Presentation Type</th>
                     <th>Uploaded At</th>
                     <th>Status</th>
@@ -130,6 +131,9 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $abstract->title }}</td>
                         <td>{{ $abstract->topic }}</td>
+                        <td><a href="{{ route('view', ['id' => $abstract->id]) }}">
+                            View File
+                        </a></td>
                         <td>{{ $abstract->presentation_type }}</td>
                         <td>{{ $abstract->created_at->format('Y-m-d') }}</td>
                         <td>{{ $abstract->status }}</td>
