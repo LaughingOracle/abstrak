@@ -106,13 +106,13 @@ class AbstractPaperController extends Controller
                 ->where('id', auth()->user()->event_id)
                 ->value('event_name');
 
-            $extractPath = storage_path('app/public/extracted/'. $eventName . '/' . $title);
+            $extractPath = storage_path('app/public/extracted/'. $abstractPaper->id);
 
-            File::deleteDirectory(storage_path('app/private/zips/'. $eventName .'/'. $abstractPaper->title));
-            File::deleteDirectory(storage_path('app/public/extracted/'. $eventName .'/'. $abstractPaper->title));
+            File::deleteDirectory(storage_path('app/private/zips/'. $abstractPaper->id));
+            File::deleteDirectory(storage_path('app/public/extracted/'. $abstractPaper->id));
 
             //extraction
-            $storedPath = $file->storeAs("zips/$eventName/$title", $filename);
+            $storedPath = $file->storeAs("zips/$abstractPaper->id", $abstractPaper->id);
             $zip->open(storage_path("app/private/{$storedPath}"));
             $zip->extractTo($extractPath);
             $zip->close();
@@ -176,9 +176,9 @@ class AbstractPaperController extends Controller
 
         Author::destroy($author);
 
-        File::deleteDirectory(storage_path('app/private/zips/' . $eventName . '/'. $abstract->title));
+        File::deleteDirectory(storage_path('app/private/zips/'. $abstract->id));
 
-        File::deleteDirectory(storage_path('app/public/extracted/' . $eventName . '/'. $abstract->title));
+        File::deleteDirectory(storage_path('app/public/extracted/' . $abstract->id));
 
         // Redirect back with a success message
         return redirect()->route('usermenu', ['event' => $eventName]);

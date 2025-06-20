@@ -1,13 +1,13 @@
 @php
-function buildFileTreeForTitle(array $paths, $title) {
+function buildFileTreeForTitle(array $paths, $id) {
     $tree = [];
     foreach ($paths as $path) {
-        // Only keep files under the folder matching $title
-        $matchPos = strpos($path, '/' . $title . '/');
+        // Only keep files under the folder matching $id
+        $matchPos = strpos($path, '/' . $id . '/');
         if ($matchPos === false) continue;
 
-        // Trim everything up to $title (inclusive)
-        $subPath = substr($path, $matchPos + strlen($title) + 2); // 2 = slashes
+        // Trim everything up to $id (inclusive)
+        $subPath = substr($path, $matchPos + strlen($id) + 2); // 2 = slashes
 
         $parts = explode('/', $subPath);
         $current = &$tree;
@@ -23,14 +23,14 @@ function buildFileTreeForTitle(array $paths, $title) {
     return $tree;
 }
 
-$fileTree = buildFileTreeForTitle($files, $title);
+$fileTree = buildFileTreeForTitle($files, $abstract->id);
 @endphp
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Files for {{ $title }} ({{ $event }})</title>
+    <title>Files for {{ $abstract->title }} ({{ $event }})</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -86,8 +86,8 @@ $fileTree = buildFileTreeForTitle($files, $title);
     </style>
 </head>
 <body>
-    <h1> "<strong>{{ $title }}</strong>" </h1>
-    <p> {{ $description }} </p>
+    <h1> "<strong>{{ $abstract->title }}</strong>" </h1>
+    <p> {{ $abstract->description }} </p>
     @if (count($fileTree))
         <ul class="tree">
             @php
@@ -110,7 +110,7 @@ $fileTree = buildFileTreeForTitle($files, $title);
             @endphp
         </ul>
     @else
-        <p>No files found for <strong>{{ $title }}</strong>.</p>
+        <p>No files found for <strong>{{ $abstract->title }}</strong>.</p>
     @endif
 
     <script>

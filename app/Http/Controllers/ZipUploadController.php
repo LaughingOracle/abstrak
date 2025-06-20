@@ -49,86 +49,92 @@ class ZipUploadController extends Controller
         ]);
 
         $eventName = DB::table('events')
-                ->where('id', auth()->user()->event_id)
-                ->value('event_name');
+            ->where('id', auth()->user()->event_id)
+            ->value('event_name');
 
-        $file = $request->file('zip_file');
-        $title = $request->input('title');
-        $filename = $file->getClientOriginalName();
-        $storedPath = $file->storeAs("zips/$eventName/$title", $filename);
+        DB::transaction(function () use ($request, $validated, $eventName) {
 
-        $extractPath = storage_path('app/public/extracted/'. $eventName .  '/' . $title);
+            // Insert into `presenter` table
+            $presenter = Presenter::create([
+                'name' => $validated['presenter_name'],
+                'email' => $validated['presenter_email'],
+            ]);
 
-        if (!file_exists($extractPath)) {
-            mkdir($extractPath, 0777, true);
-        }
 
-        $zip = new ZipArchive;
-        if ($zip->open(storage_path("app/private/{$storedPath}")) === true) {
+
+            // Insert into `AbstractPaper` table
+            $submission = AbstractPaper::create([
+                'event_id' => auth()->user()->event_id,
+                'event' => $eventName,
+                'title' => $validated['title'],
+                'description' => $validated['description'],
+                'topic' => $validated['topic'],
+                'presentation_type' => $validated['presentation_type'],
+                'abstract_account_id' => auth()->id(),
+                'presenter_id' => $presenter -> id,
+            ]);
+
+
+            ///////////////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            
+            
+            $file = $request->file('zip_file');
+            $title = $request->input('title');
+            $filename = $file->getClientOriginalName();
+            $storedPath = $file->storeAs("zips/$submission->id", $submission->id);
+
+            $extractPath = storage_path('app/public/extracted/'. $submission->id);
+
+            if (!file_exists($extractPath)) {
+                mkdir($extractPath, 0777, true);
+            }
+
+            $zip = new ZipArchive;
+            $zip->open(storage_path("app/private/{$storedPath}"));
             $zip->extractTo($extractPath);
             $zip->close();
 
-            DB::transaction(function () use ($request, $validated, $extractPath) {
 
-                // Insert into `presenter` table
-                $presenter = Presenter::create([
-                    'name' => $validated['presenter_name'],
-                    'email' => $validated['presenter_email'],
-                ]);
-
-                $eventName = DB::table('events')
-                ->where('id', auth()->user()->event_id)
-                ->value('event_name');
-
-                // Insert into `AbstractPaper` table
-                $submission = AbstractPaper::create([
-                    'event_id' => auth()->user()->event_id,
-                    'event' => $eventName,
-                    'title' => $validated['title'],
-                    'description' => $validated['description'],
-                    'topic' => $validated['topic'],
-                    'presentation_type' => $validated['presentation_type'],
-                    'abstract_account_id' => auth()->id(),
-                    'presenter_id' => $presenter -> id,
-                ]);
-                
-                // Insert multiple authors
-                foreach ($validated['author_name'] as $index => $name) {
-                    $author = Author::create([
-                        'name' => $name,
-                        'email' => $validated['author_email'][$index],
-                        'affiliation' => $validated['author_affiliation'][$index],
-                    ]);
-                    $submission->author()->attach($author->id);
-                }
-            });
-            // getting presenter and user email
-            $emails = [
-                $validated['presenter_email'],
-                auth()->user()->email
-            ];
-
-            // getting authoremail
-            foreach ($validated['author_email'] as $authorEmail){
-                $emails[] = $authorEmail;
-            }
-
-            // eliminate duplicates and null/empty emails
-            $emails = array_filter(array_unique($emails), function ($email) {
-                return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
-            });
             
-            //sending mails
-            foreach ($emails as $email){
-                Mail::raw('Abstrak anda akan segera di-review', function ($message) use ($email) {
-                    $message->to($email)->subject('Test Email');
-                });
+            /////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+            // Insert multiple authors
+            foreach ($validated['author_name'] as $index => $name) {
+                $author = Author::create([
+                    'name' => $name,
+                    'email' => $validated['author_email'][$index],
+                    'affiliation' => $validated['author_affiliation'][$index],
+                ]);
+                $submission->author()->attach($author->id);
             }
-            return redirect()->route('usermenu', ['event' => $eventName])->with('success', 'File uploaded successfully.');
-        } else {
-            return redirect()->route('usermenu', ['event' => $eventName])->with('error', 'Failed to open zip file.');
+        });
+
+        // getting presenter and user email
+        $emails = [
+            $validated['presenter_email'],
+            auth()->user()->email
+        ];
+
+        // getting authoremail
+        foreach ($validated['author_email'] as $authorEmail){
+            $emails[] = $authorEmail;
         }
 
+        // eliminate duplicates and null/empty emails
+        $emails = array_filter(array_unique($emails), function ($email) {
+            return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+        });
+        
+        //sending mails
+        foreach ($emails as $email){
+            Mail::raw('Abstrak anda akan segera di-review', function ($message) use ($email) {
+                $message->to($email)->subject('Test Email');
+            });
+        }
+        return redirect()->route('usermenu', ['event' => $eventName])->with('success', 'File uploaded successfully.');
     }
 
     public function viewFile(Request $request, $id)
@@ -145,13 +151,12 @@ class ZipUploadController extends Controller
                 ->where('id', $abstract->event_id)
                 ->value('event_name');
 
-        $storage = Storage::disk('public')->allFiles("/extracted/{$eventName}/{$abstract->title}");
+        $storage = Storage::disk('public')->allFiles("/extracted/{$abstract->id}");
 
         
         $data = array(
             'event' => $eventName,
-            'description' => $abstract->description,
-            'title' => $abstract->title,
+            'abstract' => $abstract,
             'files' => $storage,
         );
 
