@@ -8,12 +8,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Topic;
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
+use App\Models\EventForm;
 
 class AdminController extends Controller
 {
     //
     public function index(Request $request)
     {
+
         $user = Auth::user();
         if ($user && $user->email === 'admin@gmail.com') {
             $query = AbstractPaper::query();
@@ -43,8 +45,6 @@ class AdminController extends Controller
                 $query->where('presentation_type', $request->presentation_type);
             }
             $topics = $topicQuery->select('topic')->distinct()->pluck('topic');
-
-            // need revision
             
             $abstractPapers = $query->get();
             
@@ -54,6 +54,55 @@ class AdminController extends Controller
         }
         return redirect()->route('custom.login', ['event' => 'admin_event']);
     }
+
+    public function formMenu(Request $request)
+    {
+        $request->validate([
+            'event' => 'required|string|max:255',
+        ]);
+        
+        $user = Auth::user();
+        if ($user && $user->email === 'admin@gmail.com') {
+            $eventModels = Event::where('event_name',$request->event)->first();
+
+            $forms = EventForm::where('event_id', $eventModels->id)->get();
+
+            return view('formMenu', compact('forms'));
+        }
+        return redirect()->route('custom.login', ['event' => 'admin_event']);
+    }
+
+    public function formInsert(Request $request)
+    {
+        // this is dangerous, its unprotected, multi user did this
+        $request->validate([
+            'html' => 'required|string|max:65535',
+            'event' => 'required|string|max:255',
+        ]);
+
+        $eventModels = Event::where('event_name',$request->event)->first();
+
+        EventForm::create([
+            'event_id' => $eventModels->id,
+            'html' => $request->input('html'),
+        ]);
+
+        return response()->json(['success' => true]);
+    }
+
+    public function deleteForm($id)
+    {
+        $form = EventForm::find($id);
+        if (!$form) {
+            return response()->json(['success' => false, 'message' => 'Form not found.'], 404);
+        }
+
+        $form->delete();
+        return redirect()->back();
+    }
+
+
+
 
     public function assignEvent(Request $request)
     {

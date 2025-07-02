@@ -86,9 +86,7 @@
                 <th>Title</th>
                 <th>Topic</th>
                 <th>Reviewer</th>
-                <th>File</th>
-                <th>presentation type</th>
-                <th>Status</th>
+                <th>Score</th>
             </tr>
         </thead>
         <tbody>
@@ -97,31 +95,11 @@
                     <td>{{ $paper->title }}</td>
                     <td>{{ $paper->topic }}</td>
                     <td>{{ $paper->reviewer }}</td>
-                    <td>
-                        <a href="{{ route('view', ['id' => $paper->id]) }}">
-                            View File
-                        </a>
-                    </td>
                     
                     <td>
-                        {{ $paper->presentation_type }}
-                        @if ($paper->status === "dalam review")
-                            <form action="{{ route('revise', $paper->id) }}" method="POST" style="display:inline;">
-                                @csrf
-                                <button type="submit">Ubah</button>
-                            </form>
-                        @endif
-                    </td>
-
-                    <td>
-                        <form action="{{ route('review', $paper->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('scoreMenu', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
                             @csrf
-                            @if ($paper->status === "dalam review")
-                                <button type="submit" name="lulus" onclick="return confirm('Are you sure?')">Lulus</button>
-                                <button type="submit" name="tidak_lulus" onclick="return confirm('Are you sure?')">Tidak Lulus</button>
-                            @else
-                                {{ $paper->status }}
-                            @endif
+                            <button type="submit">Score</button>
                         </form>
                     </td>
                 </tr>

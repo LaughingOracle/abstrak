@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Mail;
 use App\Models\Author;
 use App\Models\Presenter;
 use App\Models\AbstractAccount;
+use App\Models\EventForm;
+use App\Models\FormInput;
 
 class ClientController extends Controller
 {
@@ -20,6 +22,30 @@ class ClientController extends Controller
 
         return view('abstractReview')->with('abstractPapers', $abstractPapers);
     }
+
+    public function scoringList(Request $request, $event, $name){
+        $abstractPapers = AbstractPaper::where('event', $event)->where('reviewer', $name)->get();
+
+        return view('abstractReview2')->with('abstractPapers', $abstractPapers);
+    }
+
+
+
+
+
+
+    public function scoreMenu(Request $request, $id){
+        $abstractPapers = AbstractPaper::find($id);
+        $forms = EventForm::where('event_id', $abstractPapers->event_id)->get();
+
+        return view('scoring')->with(['forms' => $forms, 'eventId' => $abstractPapers->event_id, 'abstractPaperId' => $abstractPapers->id]);
+    }
+
+
+
+
+
+
 
     public function revise(Request $request, $id)
     {
@@ -79,4 +105,30 @@ class ClientController extends Controller
 
         return redirect()->back();
     }
+
+    public function score(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'abstract_paper_id' => 'required|exists:abstract_papers,id',
+            'forms' => 'required|array',
+        ]);
+
+        $eventId = $request->input('event_id');
+        $abstractPaperId = $request->input('abstract_paper_id');
+        $formGroups = $request->input('forms');
+
+        foreach ($formGroups as $eventFormId => $fields) {
+            foreach ($fields as $value) {
+                FormInput::create([
+                    'event_form_id' => $eventFormId,
+                    'abstract_paper_id' => $abstractPaperId,
+                    'value' => (string) $value,
+                ]);
+            }
+        }
+
+        return redirect()->back()->with('success', 'All forms submitted.');
+    }
+
 }

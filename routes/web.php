@@ -19,6 +19,9 @@ Route::get('/view/{id}', [ZipUploadController::class, 'viewFile'])->name('view')
 
 // route for dr john doctor
 Route::get('/client/{event}/{name}', [ClientController::class, 'listing'])->name('listing');
+Route::get('/scoringList/{event}/{name}', [ClientController::class, 'scoringList'])->name('scoringList');
+Route::get('/scoreMenu/{id}', [ClientController::class, 'scoreMenu'])->name('scoreMenu');
+Route::post('/score', [ClientController::class, 'score'])->name('score');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
 
@@ -50,6 +53,11 @@ Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('ins
 Route::post('/dashboard/event', [AdminController::class, 'assignEvent'])->name('assignEvent');
 Route::post('/dashboard/topic', [AdminController::class, 'assignTopic'])->name('assignTopic');
 
+//this one is an extention for dashboard, its in a different page to avoid ui cluster
+//also, please avoid using this when an event is ongoing
+Route::get('/formMenu', [AdminController::class, 'formMenu'])->name('formMenu');
+Route::post('/formInsert', [AdminController::class, 'formInsert'])->name('formInsert');
+Route::delete('/formDelete/{id}', [AdminController::class, 'deleteForm'])->name('formDelete');
 
 Route::get('/forgot-password/{event}', [ForgotPasswordController::class, 'showRequestForm'])->name('custom.password.request');
 Route::post('/forgot-password/{event}', [ForgotPasswordController::class, 'sendResetLink']);

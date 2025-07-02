@@ -4,19 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Event;
 
-class Sponsor extends Model
+class EventForm extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'pic_name',
-        'pic_phone',
-        'pic_email'
+        'event_id',
+        'html',
     ];
 
-    public function eventAccount()
+    public function Event()
     {
-        return $this->belongsTo(eventAccount::class);
+        return $this->belongsTo(event::class);
     }
 }

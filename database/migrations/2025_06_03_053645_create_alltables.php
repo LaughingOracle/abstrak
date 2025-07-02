@@ -75,31 +75,19 @@ return new class extends Migration
             $table->foreignId('author_id')->constrained()->onDelete('cascade');
         });
 
-        Schema::create('event_accounts', function (Blueprint $table) {
+        Schema::create('event_forms', function (Blueprint $table) {
             $table->id();
-            $table->enum('category',
-            ['Pedriatician','Other Specialist', 'General Practitioner',
-             'Specialist Programmer (SP1)', 'Trainee (SP2)', 'Sub-Specialist Programme', 
-             'APSPGHAN Member (International Participant)', 'International Participant', 
-             'APSPGHAN Non-Member (Insternational Participant)']);
-
-            $table->string('full_name');
-            $table->string('nik_passport');
-            $table->string('institution');
-            $table->string('email');
-            $table->string('phone_number');
-            $table->string('address');
-            $table->string('province_country');
+            $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('html', 1024);
             
             $table->timestamps();
         });
 
-        Schema::create('sponsors', function (Blueprint $table) {
+        Schema::create('form_inputs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('event_account_id')->constrained()->onDelete('cascade');
-            $table->string('pic_email');
-            $table->string('pic_name');
-            $table->string('pic_phone');
+            $table->foreignId('event_form_id')->constrained()->onDelete('cascade');
+            $table->foreignId('abstract_paper_id')->constrained()->onDelete('cascade');
+            $table->string('value');
             $table->timestamps();
         });
 

@@ -53,6 +53,57 @@
             </div>
         </form>
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        <form method="GET" action=" {{route('formMenu')}} ">
+
+            <div style="all: unset;">
+                <label for="event">Assign form:</label>
+                <select name="event" id="event" required>
+                    <option value="">-- Unselected --</option>
+                    @foreach ($eventLists as $eventList)
+                        <option value="{{ $eventList }}" {{ request('event') == $eventList ? 'selected' : '' }}>
+                            {{ ucfirst($eventList) }}
+                        </option>
+                    @endforeach
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Assign form</button>
+            </div>
+        </form>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <hr>
         <h3>filtering tools: </h3>
         <!-- Filter Form -->
@@ -145,7 +196,8 @@
                 <tr>
                     <th>Event</th>
                     <th>Reviewer</th>
-                    <th>Url</th>
+                    <th>Url (stage 1)</th>
+                    <th>Url (stage 2)</th>
                 </tr>
             </thead>
             <tbody>
@@ -157,6 +209,11 @@
                             <td>
                                 <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
                                     {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}">
+                                    {{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}
                                 </a>
                             </td>
                         </tr>
