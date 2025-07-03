@@ -50,3 +50,12 @@ fitur forgot password fungsional. fix multi register conflict, fitur asign event
 20/06/25
 ui dokter jadi. perubahan rute view, jadi pake id
 perubahan sistem penyimpanan file, sekarang jadi pake id (sudah termasuk upload, update, delete, dan view)
+
+
+//recoil dari event fmi
+2/06/25
+banyak perubahan, scope naik lagi, perlu custom form cms. kemarin fokus ke perencanaan dan desain
+hari ini implementasi. custom form cms selesai, tinggal style dan additional polish
+perlu juga ngurusin masalah redudansi (menurut gw ok aja sih)
+stage 2 perlu lebih banyak redesain, fungsinya udah bagus, tapi perlu dipikir lebih jauh gimana assignya.
+either way, pa Deni kemarin emang mau ada proses penilaian buat abstrak pula.

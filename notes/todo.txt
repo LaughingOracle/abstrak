@@ -35,4 +35,39 @@ tambah table: x
 
 i dunno, tombol tambah event&topic(x) dan topik, trus ui? x
 
-bikin sistem cms untuk form penilaian abstrak
+bikin sistem cms untuk form penilaian abstrak x
+
+
+
+table event form bikin jadi punya colum tipe lagi, isinya buat poster/oral x
+
+
+------------prioritas ke-1----------
+
+
+presenter email dan author email hapus x
+fitur pdf untuk abstarct x
+tambahan kolom untuk juri view pdf abstarct x
+reviewer stage 1 harus ada penialain x
+fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster (<--implementasi frontend bedasarkan brapa banyak abstrak dengan status 'lulus')
+fitur notif abstact diterima atau tidak (<-- sama kayak yang atas)
+poster tidak usah di tampilkan oleh juri hanya oleh admin
+tambah ruangan mana dan tv mana untuk oral dan poster (<-- pake kolum 'logistic')
+
+
+
+
+bikin tombol upload poster/oral pas lulus, trus langsung simpen di storage/public/(poster/oral)/{abstract->id}
+
+-------------prioritas ke-2-----------
+
+bikin sistem export ke exel
+
+bikin sistem stage 2 jadi lebih modular, pindahin semua stage 2 stuff ke halaman lain
+
+gimana kalo klien mau stage 2 pake file lain kayak event mariot?
+
+bisa aj klien mau langsung ke stage 2, bikin admin bisa ubah status secara masal?
+atau mungkin lebih baik bikin colum baru khusus untuk mau stage 1 doang atau 2 doang? ini bikin kedepanya lebih modular kalo untuk suatu alasan perlu sistem stage lain
+
+bakal bagus kalo bisa asign ke stage 2 bukan cuma ke abtrak, tapi juga ke poster atau oral <- (perlu bikin tablenya, harusnya ga beda jauh dengan abstrak)

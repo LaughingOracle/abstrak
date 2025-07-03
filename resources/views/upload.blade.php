@@ -104,8 +104,15 @@
             <option value="oral">Oral</option>
         </select>
 
-        <label for="zip_file">ZIP File</label>
-        <input type="file" name="zip_file" required>
+        <label for="pdf">Abstract PDF</label>
+        <input type="file" name="pdf" required>
+
+        <div style="display: flex; align-items: center;">
+            <label for="zip_file">Supporting File (ZIP)</label>
+            <span style="opacity: 0.6; font-size: 0.85em;">*optional</span>
+        </div>
+        
+        <input type="file" name="zip_file">
         <p style="font-size: 0.9em; color: #555; margin-top: 1em;">
             📁 Please compress your files into a <strong>.zip (not rar)</strong> archive with a maximum of 8 megabytes before uploading.  
             For best results, use supported formats like <strong>.pdf</strong>, <strong>.jpg</strong>, <strong>.mp4</strong>, or <strong>.txt</strong> inside the archive.
@@ -114,8 +121,6 @@
         <label for="presenter_name">Presenter Name</label>
         <input type="text" name="presenter_name" id="presenter_name" required>
 
-        <label for="presenter_email">Presenter Email</label>
-        <input type="text" name="presenter_email" id="presenter_email" required>
 
         <div id="dynamicFields"></div>
         <button type="button" id="addFieldBtn">Add Author</button>
@@ -152,8 +157,6 @@
             fieldGroup.appendChild(label('author_name_' + count, 'Author Name'));
             fieldGroup.appendChild(input('text', 'author_name', author.name || ''));
 
-            fieldGroup.appendChild(label('author_email_' + count, 'Author Email'));
-            fieldGroup.appendChild(input('text', 'author_email', author.email || ''));
 
             fieldGroup.appendChild(label('author_affiliation_' + count, 'Author Affiliation'));
             fieldGroup.appendChild(input('text', 'author_affiliation', author.affiliation || ''));

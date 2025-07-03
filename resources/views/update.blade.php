@@ -123,7 +123,20 @@
 
         <br><br>
 
-        <input type="file" name="zip_file" required>
+        <label for="pdf">Abstract PDF</label>
+        <input type="file" name="pdf" required>
+
+        <div style="display: flex; align-items: center;">
+            <label for="zip_file">Supporting File (ZIP)</label>
+            <span style="opacity: 0.6; font-size: 0.85em;">*optional</span>
+        </div>
+        
+        <input type="file" name="zip_file">
+        <p style="font-size: 0.9em; color: #555; margin-top: 1em;">
+            📁 Please compress your files into a <strong>.zip (not rar)</strong> archive with a maximum of 8 megabytes before uploading.  
+            For best results, use supported formats like <strong>.pdf</strong>, <strong>.jpg</strong>, <strong>.mp4</strong>, or <strong>.txt</strong> inside the archive.
+        </p>
+
 
         <br><br><br>
 
@@ -131,10 +144,6 @@
         <input type="text" name="presenter_name" id="presenter_name" value="{{ $abstract->presenter->name}}">
 
         <br><br>
-
-        <label for="presenter_email">Presenter email</label>
-        <input type="text" name="presenter_email" id="presenter_email" value="{{ $abstract->presenter->email}}">
-
         <br><br><br>
 
         <div id="dynamicFields"></div>
@@ -145,8 +154,7 @@
     </form>
 @php
     $authorIds = $abstract->author()->pluck('author_id');
-    $existingAuthors = \App\Models\Author::whereIn('id', $authorIds)->get(['name', 'email', 'affiliation']);
-
+    $existingAuthors = \App\Models\Author::whereIn('id', $authorIds)->get(['name', 'affiliation']);
 @endphp
 <script>
     let count = 1;
@@ -178,10 +186,6 @@
 
         fieldGroup.appendChild(label('author_name_' + count, 'Author name: '));
         fieldGroup.appendChild(input('text', 'author_name', author.name || ''));
-        fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
-
-        fieldGroup.appendChild(label('author_email_' + count, 'Author email: '));
-        fieldGroup.appendChild(input('text', 'author_email', author.email || ''));
         fieldGroup.appendChild(br()); fieldGroup.appendChild(br());
 
         fieldGroup.appendChild(label('author_affiliation_' + count, 'Author affiliation: '));

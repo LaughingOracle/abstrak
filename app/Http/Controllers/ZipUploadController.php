@@ -33,16 +33,13 @@ class ZipUploadController extends Controller
         'description' => 'required|string|max:2048',
         'topic' => 'required|string',
         'presentation_type' => 'required|in:poster,oral',
-        'zip_file' => 'required|file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
+        'zip_file' => 'file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
+        'pdf' => 'required|file|mimes:pdf',
         'presenter_name' => 'required|string|max:255',
-        'presenter_email' => 'required|email|max:255',
 
         //dynamic validation
         'author_name' => 'required|array',
         'author_name.*' => 'required|string|max:255',
-
-        'author_email' => 'required|array',
-        'author_email.*' => 'required|email|max:255',
 
         'author_affiliation' => 'required|array',
         'author_affiliation.*' => 'required|string|max:255',
@@ -57,7 +54,6 @@ class ZipUploadController extends Controller
             // Insert into `presenter` table
             $presenter = Presenter::create([
                 'name' => $validated['presenter_name'],
-                'email' => $validated['presenter_email'],
             ]);
 
 
@@ -77,23 +73,46 @@ class ZipUploadController extends Controller
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-            
-            
-            $file = $request->file('zip_file');
-            $title = $request->input('title');
-            $filename = $file->getClientOriginalName();
-            $storedPath = $file->storeAs("zips/$submission->id", $submission->id);
+            $pdf = $request->file('pdf');
+            // Get file extension (e.g., pdf)
+            $extension = $pdf->getClientOriginalExtension();
 
-            $extractPath = storage_path('app/public/extracted/'. $submission->id);
+            // Save PDF to private disk (relative to storage/app/private)
+            $pdfPathBak = $pdf->storeAs("pdf/$submission->id", $submission->id) . '.' . $extension;
 
-            if (!file_exists($extractPath)) {
-                mkdir($extractPath, 0777, true);
+            // save to public disk (storage/app/public)
+            $pdfPath = $pdf->storeAs(
+                "pdf/$submission->id", // subfolder inside /storage/app/public
+                "$submission->id" . '.' . $extension,
+                'public' // this refers to the disk
+            );
+
+            if ($request->hasFile('zip_file')) {
+                $file = $request->file('zip_file');
+                $title = $request->input('title');
+                $filename = $file->getClientOriginalName();
+
+                // Store the ZIP file
+                $storedPath = $file->storeAs("zips/{$submission->id}", $submission->id);
+
+                // Define extraction path
+                $extractPath = storage_path('app/public/extracted/' . $submission->id);
+
+                // Create directory if it doesn't exist
+                if (!file_exists($extractPath)) {
+                    mkdir($extractPath, 0777, true);
+                }
+
+                // Extract the ZIP
+                $zip = new ZipArchive;
+                if ($zip->open(storage_path("app/private/{$storedPath}")) === true) {
+                    $zip->extractTo($extractPath);
+                    $zip->close();
+                } else {
+                    // Handle failed zip open
+                    return back()->withErrors(['zip_file' => 'Failed to open the zip file.']);
+                }
             }
-
-            $zip = new ZipArchive;
-            $zip->open(storage_path("app/private/{$storedPath}"));
-            $zip->extractTo($extractPath);
-            $zip->close();
 
 
             
@@ -105,7 +124,6 @@ class ZipUploadController extends Controller
             foreach ($validated['author_name'] as $index => $name) {
                 $author = Author::create([
                     'name' => $name,
-                    'email' => $validated['author_email'][$index],
                     'affiliation' => $validated['author_affiliation'][$index],
                 ]);
                 $submission->author()->attach($author->id);
@@ -114,19 +132,8 @@ class ZipUploadController extends Controller
 
         // getting presenter and user email
         $emails = [
-            $validated['presenter_email'],
             auth()->user()->email
         ];
-
-        // getting authoremail
-        foreach ($validated['author_email'] as $authorEmail){
-            $emails[] = $authorEmail;
-        }
-
-        // eliminate duplicates and null/empty emails
-        $emails = array_filter(array_unique($emails), function ($email) {
-            return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
-        });
         
         //sending mails
         foreach ($emails as $email){
@@ -162,5 +169,32 @@ class ZipUploadController extends Controller
 
 
         return view('display')->with($data);
+    }
+
+    public function viewAbstract(Request $request, $id)
+    {
+        $request->merge([ 'id' => $id]);
+        $request->validate([
+            'id' => 'required'
+        ]); // receive 'id' input from request
+        $id = $request->input('id');
+
+        $abstract = AbstractPaper::findOrFail($id);
+
+        $eventName = DB::table('events')
+                ->where('id', $abstract->event_id)
+                ->value('event_name');
+
+        $storage = Storage::disk('public')->allFiles("/pdf/{$abstract->id}");
+
+        
+        $data = array(
+            'event' => $eventName,
+            'abstract' => $abstract,
+            'files' => $storage,
+        );
+
+
+        return view('displayAbstract')->with($data);
     }
 }

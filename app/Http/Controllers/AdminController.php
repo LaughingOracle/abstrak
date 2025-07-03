@@ -59,17 +59,18 @@ class AdminController extends Controller
     {
         $request->validate([
             'event' => 'required|string|max:255',
+            'type' => 'required'
         ]);
         
         $user = Auth::user();
         if ($user && $user->email === 'admin@gmail.com') {
             $eventModels = Event::where('event_name',$request->event)->first();
 
-            $forms = EventForm::where('event_id', $eventModels->id)->get();
+            $forms = EventForm::where('event_id', $eventModels->id)->where('type', $request->type)->get();
 
             return view('formMenu', compact('forms'));
         }
-        return redirect()->route('custom.login', ['event' => 'admin_event']);
+        return redirect()->route('custom.login', ['event' => 'admin_event', 'type' => $request->type]);
     }
 
     public function formInsert(Request $request)
@@ -78,6 +79,7 @@ class AdminController extends Controller
         $request->validate([
             'html' => 'required|string|max:65535',
             'event' => 'required|string|max:255',
+            'type' => 'required',
         ]);
 
         $eventModels = Event::where('event_name',$request->event)->first();
@@ -85,6 +87,7 @@ class AdminController extends Controller
         EventForm::create([
             'event_id' => $eventModels->id,
             'html' => $request->input('html'),
+            'type' => $request->input('type'),
         ]);
 
         return response()->json(['success' => true]);

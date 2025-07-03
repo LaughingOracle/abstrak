@@ -52,31 +52,11 @@
                 <button type="submit" class="btn btn-primary mt-2">Assign topic</button>
             </div>
         </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        <br>
+        <label> Assign Form: </label>
         <form method="GET" action=" {{route('formMenu')}} ">
-
             <div style="all: unset;">
-                <label for="event">Assign form:</label>
+                <label for="event">Event:</label>
                 <select name="event" id="event" required>
                     <option value="">-- Unselected --</option>
                     @foreach ($eventLists as $eventList)
@@ -85,24 +65,16 @@
                         </option>
                     @endforeach
                 </select>
+                <label> Type </label>
+                <select name="type" id="type" required>
+                    <option value="">-- Unselected --</option>
+                    <option value="abstract">Abstract</option>
+                    <option value="poster">Poster</option>
+                    <option value="oral">Oral</option>
+                </select>
                 <button type="submit" class="btn btn-primary mt-2">Assign form</button>
             </div>
         </form>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         <hr>
         <h3>filtering tools: </h3>
@@ -155,9 +127,16 @@
         <form method="POST" action="{{ route('insertReviewer') }}">
             @csrf
             <div class="mb-3">
-                <label for="reviewer">Assign Reviewer:</label>
-                <input type="text" name="reviewer" id="reviewer" class="form-control" required>
-                <button type="submit" class="btn btn-primary mt-2">Assign Reviewer to Selected</button>
+                <label for="reviewer">Assign Doctors Name:</label>
+                <input type="text" name="reviewer" id="reviewer" required>
+
+                <label for="reviewer">Assignment</label>
+                <select name="stage" id="stage" required>
+                        <option value="">-- All Presentation Type --</option>
+                        <option value=""> Reviewer (stage 1) </option>
+                        <option value=""> Jury (Stage 2) </option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">Assign Doctor to Selected</button>
             </div>
 
             <table border="1" cellpadding="8" cellspacing="0">
@@ -170,7 +149,8 @@
                         <th>Topic</th>
                         <th>Presentation Type</th>
                         <th>Status</th>
-                        <th>Reviewer</th>
+                        <th>Reviewer (stage 1)</th>
+                        <th>Jury (stage 2)</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -184,6 +164,7 @@
                             <td>{{ $paper->presentation_type }}</td>
                             <td>{{ $paper->status }}</td>
                             <td>{{ $paper->reviewer ?? '-' }}</td>
+                            <td>{{ $paper->jury ?? '-' }}</td>
                         </tr>
                     @endforeach
                 </tbody>
@@ -207,14 +188,24 @@
                             <td>{{ $row->event }}</td>
                             <td>{{ $row->reviewer }}</td>
                             <td>
-                                <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
-                                    {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
-                                </a>
+                                @if ($paper->reviewer)
+                                    <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
+                                        {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
+                                    </a>
+                                @else
+                                -
+                                @endif
+
+
                             </td>
                             <td>
-                                <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}">
-                                    {{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}
-                                </a>
+                                @if ($paper->jury)
+                                    <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}">
+                                        {{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}
+                                    </a>
+                                @else
+                                -
+                                @endif
                             </td>
                         </tr>
                     @endif

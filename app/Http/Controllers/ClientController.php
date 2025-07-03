@@ -9,6 +9,7 @@ use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
 use Illuminate\Support\Facades\Mail;
 use App\Models\Author;
+use App\Models\Event;
 use App\Models\Presenter;
 use App\Models\AbstractAccount;
 use App\Models\EventForm;
@@ -60,50 +61,30 @@ class ClientController extends Controller
         return redirect()->back();
     }
 
-    public function review(Request $request, $id)
+    public function review($id, $status)
     {
         $paper = AbstractPaper::findOrFail($id);
 
-        if ($request->has('lulus')) {
-            $paper->status = 'lulus';
-            $messageContent = 'abstrak anda lulus';
-        } elseif ($request->has('tidak_lulus')) {
-            $paper->status = 'tidak lulus';
-            $messageContent = 'abstrak anda tidak lulus';
-        }
+        $paper->status = $status;
+        $messageContent = 'abstrak anda: ' . $status;
 
         $paper->save();
-
-        // getting presenter email
-        $emails = [
-            $paper->presenter_email
-        ];
 
         //getting abstract account
         $abstract_account = AbstractAccount::findOrFail($paper->abstract_account_id);
         $emails[] = $abstract_account->email;
-
-        // getting author email
-        $authorsEmail = $paper->author()->get()->pluck('email');
-        foreach ($authorsEmail as $authorEmail){
-            $emails[] = $authorEmail;
-        }
 
         // eliminate duplicates and null/empty emails
         $emails = array_filter(array_unique($emails), function ($email) {
             return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
         });
 
-        
-        
         //sending mails
         foreach ($emails as $email){
             Mail::raw($messageContent, function ($message) use ($email) {
                 $message->to($email)->subject('Test Email');
             });
         }
-
-        return redirect()->back();
     }
 
     public function score(Request $request)
@@ -111,6 +92,7 @@ class ClientController extends Controller
         $request->validate([
             'event_id' => 'required|exists:events,id',
             'abstract_paper_id' => 'required|exists:abstract_papers,id',
+            'status' => 'required',
             'forms' => 'required|array',
         ]);
 
@@ -127,8 +109,12 @@ class ClientController extends Controller
                 ]);
             }
         }
-
-        return redirect()->back()->with('success', 'All forms submitted.');
+        $abstract = AbstractPaper::find($abstractPaperId);
+        $this->review($abstractPaperId, $request->input('status'));
+        return redirect()->route('listing', [
+            'event' => $abstract->event,
+            'name' => $abstract->reviewer
+        ]);
     }
 
 }

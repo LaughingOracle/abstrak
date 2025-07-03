@@ -86,10 +86,27 @@ $fileTree = buildFileTreeForTitle($files, $abstract->id);
     </style>
 </head>
 <body>
-    <!--
+    
     <h1> "<strong>{{ $abstract->title }}</strong>" </h1>
+        @php
+            $presenter = \App\Models\Presenter::find($abstract->presenter_id);
+        @endphp
+    <div style="text-align: center;">
+        <span style="opacity: 0.6; font-size: 0.85em;">Presented by: {{ $presenter->name }}</span>
+    </div>
+    <div style="text-align: center;">
+        <span style="opacity: 0.6; font-size: 0.85em; text-align: center;">Authored by: </span>
+        @php
+            $authorIds = $abstract->author()->pluck('author_id');
+            $existingAuthors = \App\Models\Author::whereIn('id', $authorIds)->get(['name', 'affiliation']);
+        @endphp
+        @foreach ($existingAuthors as $author)
+            <span style="opacity: 0.6; font-size: 0.85em;">{{ $author->name }}</span> @if (!$loop->last), @endif
+        @endforeach
+    </div>
+
     <p> {{ $abstract->description }} </p>
-    -->
+    
     @if (count($fileTree))
         <ul class="tree">
             @php

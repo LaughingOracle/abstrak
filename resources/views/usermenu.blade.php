@@ -118,7 +118,8 @@
                     <th>#</th>
                     <th>Title</th>
                     <th>Topic</th>
-                    <th>File</th>
+                    <th>PDF</th>
+                    <th>Supporting File</th>
                     <th>Presentation Type</th>
                     <th>Uploaded At</th>
                     <th>Status</th>
@@ -131,6 +132,9 @@
                         <td>{{ $index + 1 }}</td>
                         <td>{{ $abstract->title }}</td>
                         <td>{{ $abstract->topic }}</td>
+                        <td><a href="{{ route('viewAbstract', ['id' => $abstract->id]) }}">
+                            View Abstract
+                        </a></td>
                         <td><a href="{{ route('view', ['id' => $abstract->id]) }}">
                             View File
                         </a></td>

@@ -43,7 +43,6 @@ return new class extends Migration
         Schema::create('authors', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
             $table->string('affiliation');
             $table->timestamps();
         });
@@ -51,7 +50,6 @@ return new class extends Migration
         Schema::create('presenters', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('email');
             $table->timestamps();
         });
 
@@ -63,8 +61,9 @@ return new class extends Migration
             $table->foreignId('presenter_id')->constrained()->onDelete('cascade');
             $table->string('title');
             $table->string('topic');
-            $table->string('description', 2048);
+            $table->text('description');
             $table->string('reviewer')->nullable();
+            $table->string('jury')->nullable();
             $table->enum('presentation_type',['poster','oral']);
             $table->enum('status',['dalam review','lulus', 'tidak lulus']);
             $table->timestamps();
@@ -78,6 +77,7 @@ return new class extends Migration
         Schema::create('event_forms', function (Blueprint $table) {
             $table->id();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
+            $table->string('type');
             $table->string('html', 1024);
             
             $table->timestamps();

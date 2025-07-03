@@ -14,7 +14,7 @@ use App\Http\Controllers\ForgotPasswordController;
 
 //defunct, no dynamic routing in blade's href (yet)
 //Route::get('/home', [HomeController::class, 'index'])->name('home');
-
+Route::get('/viewAbstract/{id}', [ZipUploadController::class, 'viewAbstract'])->name('viewAbstract');
 Route::get('/view/{id}', [ZipUploadController::class, 'viewFile'])->name('view');
 
 // route for dr john doctor

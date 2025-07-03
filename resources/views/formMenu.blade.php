@@ -23,7 +23,7 @@
   <label for="labelText">Label Text:</label>
   <input type="text" id="labelText" placeholder="e.g. Enter your name">
   <input type="hidden" id="eventValue" value="{{ request('event') }}">
-
+  <input type="hidden" id="type" value="{{ request('type') }}">
   <div id="extraOptions"></div>
 
   <button onclick="generateHTML()">Generate Form</button>
@@ -44,12 +44,6 @@
             </div>
         </form>
     @endforeach
-
-
-
-
-
-
   <script>
     const inputType = document.getElementById("inputType");
     const extraOptions = document.getElementById("extraOptions");
@@ -103,6 +97,7 @@
 
         // Submit to backend
         const event = document.getElementById("eventValue").value;
+        const type2 = document.getElementById("type").value;
         fetch("/formInsert",  {
             method: "POST",
             headers: {
@@ -111,7 +106,8 @@
             },
             body: JSON.stringify({
                 html: html,
-                event: event
+                event: event,
+                type: type2
             })
         })
         .then(res => res.json())

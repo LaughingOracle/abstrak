@@ -65,19 +65,16 @@ class AbstractPaperController extends Controller
 
         $validated = $request->validate([
         'title' => 'required|string|max:255',
-        'description' => 'required|string|max:2048',
+        'description' => 'required|string',
         'topic' => 'required|string',
         'presentation_type' => 'required|in:poster,oral',
-        'zip_file' => 'required|file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
+        'pdf' => 'required|file|mimes:pdf',
+        'zip_file' => 'file|mimes:zip|max:1073741824', // max:1073741824 = 1TB  <-- kebanyakan? skripsi saya sekitar 30 giga, ga tau kalo kedokteran berapa. jangan hapus limit, ini pencegahan DOS (jangan samakan dengan DDOS btw)
         'presenter_name' => 'required|string|max:255',
-        'presenter_email' => 'required|email|max:255',
 
         //dynamic validation
         'author_name' => 'required|array',
         'author_name.*' => 'required|string|max:255',
-
-        'author_email' => 'required|array',
-        'author_email.*' => 'required|email|max:255',
 
         'author_affiliation' => 'required|array',
         'author_affiliation.*' => 'required|string|max:255',
@@ -92,30 +89,45 @@ class AbstractPaperController extends Controller
             // Update Presenter
             $presenter = $abstractPaper->presenter;
             $presenter->update([
-                'name' => $validated['presenter_name'],
-                'email' => $validated['presenter_email'],
+                'name' => $validated['presenter_name']
             ]);
 
             // Handle new file upload
-            $zip = new ZipArchive;
-            $file = $request->file('zip_file');
-            $title = $request->input('title');
-            $filename = $file->getClientOriginalName();
 
-            $eventName = DB::table('events')
-                ->where('id', auth()->user()->event_id)
-                ->value('event_name');
+            $pdf = $request->file('pdf');
+            // Get file extension (e.g., pdf)
+            $extension = $pdf->getClientOriginalExtension();
 
-            $extractPath = storage_path('app/public/extracted/'. $abstractPaper->id);
+            // Save PDF to private disk (relative to storage/app/private)
+            $pdfPathBak = $pdf->storeAs("pdf/$abstractPaper->id", $abstractPaper->id) . '.' . $extension;
 
-            File::deleteDirectory(storage_path('app/private/zips/'. $abstractPaper->id));
-            File::deleteDirectory(storage_path('app/public/extracted/'. $abstractPaper->id));
+            // save to public disk (storage/app/public)
+            $pdfPath = $pdf->storeAs(
+                "pdf/$abstractPaper->id", // subfolder inside /storage/app/public
+                "$abstractPaper->id" . '.' . $extension,
+                'public' // this refers to the disk
+            );
 
-            //extraction
-            $storedPath = $file->storeAs("zips/$abstractPaper->id", $abstractPaper->id);
-            $zip->open(storage_path("app/private/{$storedPath}"));
-            $zip->extractTo($extractPath);
-            $zip->close();
+            if ($request->hasFile('zip_file')) {
+                $zip = new ZipArchive;
+                $file = $request->file('zip_file');
+                $title = $request->input('title');
+                $filename = $file->getClientOriginalName();
+
+                $eventName = DB::table('events')
+                    ->where('id', auth()->user()->event_id)
+                    ->value('event_name');
+
+                $extractPath = storage_path('app/public/extracted/'. $abstractPaper->id);
+
+                File::deleteDirectory(storage_path('app/private/zips/'. $abstractPaper->id));
+                File::deleteDirectory(storage_path('app/public/extracted/'. $abstractPaper->id));
+                //extraction
+                $storedPath = $file->storeAs("zips/$abstractPaper->id", $abstractPaper->id);
+                $zip->open(storage_path("app/private/{$storedPath}"));
+                $zip->extractTo($extractPath);
+                $zip->close();
+            }
 
             // Update Abstract Paper
             $abstractPaper->update([
@@ -130,7 +142,7 @@ class AbstractPaperController extends Controller
             for ($i = 0; $i < count($validated['author_name']); $i++) {
                 $author = Author::firstOrCreate(
                     [
-                        'email' => $validated['author_email'][$i],
+                        'name' => $validated['author_name'][$i],
                     ],
                     [
                         'name' => $validated['author_name'][$i],
@@ -177,8 +189,9 @@ class AbstractPaperController extends Controller
         Author::destroy($author);
 
         File::deleteDirectory(storage_path('app/private/zips/'. $abstract->id));
-
         File::deleteDirectory(storage_path('app/public/extracted/' . $abstract->id));
+        File::deleteDirectory(storage_path('app/private/pdf/'. $abstract->id));
+        File::deleteDirectory(storage_path('app/public/pdf/' . $abstract->id));
 
         // Redirect back with a success message
         return redirect()->route('usermenu', ['event' => $eventName]);

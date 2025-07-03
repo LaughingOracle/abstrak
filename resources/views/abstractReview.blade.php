@@ -86,8 +86,9 @@
                 <th>Title</th>
                 <th>Topic</th>
                 <th>Reviewer</th>
-                <th>File</th>
-                <th>presentation type</th>
+                <th>Abstract</th>
+                <th>Supporting File</th>
+                <th>Presentation Type</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -97,6 +98,11 @@
                     <td>{{ $paper->title }}</td>
                     <td>{{ $paper->topic }}</td>
                     <td>{{ $paper->reviewer }}</td>
+                    <td>
+                        <a href="{{ route('viewAbstract', ['id' => $paper->id]) }}">
+                            View Abstract
+                        </a>
+                    </td>
                     <td>
                         <a href="{{ route('view', ['id' => $paper->id]) }}">
                             View File
@@ -114,12 +120,10 @@
                     </td>
 
                     <td>
-                        <form action="{{ route('review', $paper->id) }}" method="POST" style="display:inline;">
+                        <form action="{{ route('scoreMenu', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
                             @csrf
                             @if ($paper->status === "dalam review")
-                                <button type="submit" name="lulus" onclick="return confirm('Are you sure?')">Lulus</button>
-                                <button type="submit" name="tidak_lulus" onclick="return confirm('Are you sure?')">Tidak Lulus</button>
-                            @else
+                            <button type="submit">Score</button> @else
                                 {{ $paper->status }}
                             @endif
                         </form>
