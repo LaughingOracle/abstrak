@@ -64,6 +64,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('reviewer')->nullable();
             $table->string('jury')->nullable();
+            $table->string('logistic')->nullable();
             $table->enum('presentation_type',['poster','oral']);
             $table->enum('status',['dalam review','lulus', 'tidak lulus']);
             $table->timestamps();
@@ -78,6 +79,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('event_id')->constrained()->onDelete('cascade');
             $table->string('type');
+            $table->string('label');
             $table->string('html', 1024);
             
             $table->timestamps();

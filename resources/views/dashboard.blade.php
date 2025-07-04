@@ -75,6 +75,28 @@
                 <button type="submit" class="btn btn-primary mt-2">Assign form</button>
             </div>
         </form>
+        <label> View Scores: </label>
+        <form method="GET" action=" {{route('report')}} ">
+            <div style="all: unset;">
+                <label for="event">Event:</label>
+                <select name="event" id="event" required>
+                    <option value="">-- Unselected --</option>
+                    @foreach ($eventLists as $eventList)
+                        <option value="{{ $eventList}}" {{ request('event') == $eventList ? 'selected' : '' }}>
+                            {{ ucfirst($eventList) }}
+                        </option>
+                    @endforeach
+                </select>
+                <label> Type </label>
+                <select name="type" id="type" required>
+                    <option value="">-- Unselected --</option>
+                    <option value="abstract">Abstract</option>
+                    <option value="poster">Poster</option>
+                    <option value="oral">Oral</option>
+                </select>
+                <button type="submit" class="btn btn-primary mt-2">View</button>
+            </div>
+        </form>
 
         <hr>
         <h3>filtering tools: </h3>
@@ -87,39 +109,33 @@
                     <select name="event" id="event" class="form-control">
                         <option value="">-- All Event --</option>
                         @foreach ($eventLists as $eventList)
-                            <option value="{{ $eventList }}" {{ request('event') == $eventList ? 'selected' : '' }}>
-                                {{ ucfirst($eventList) }}
-                            </option>
+                        <option value="{{ $eventList }}" {{ request('event') == $eventList ? 'selected' : '' }}>
+                            {{ ucfirst($eventList) }}
+                        </option>
                         @endforeach
                     </select>
-                </div>
+                    </div>
 
 
-                <div class="col-md-4">
-                    <label for="topic">Filter by Topic:</label>
-                    <select name="topic" id="topic" class="form-control">
-                        <option value="">-- All Topics --</option>
-                        @foreach ($topics as $topic)
+                    <div class="col-md-4">
+                        <label for="topic">Filter by Topic:</label>
+                        <select name="topic" id="topic" class="form-control">
+                            <option value="">-- All Topics --</option>
+                            @foreach ($topics as $topic)
+                                <option value="{{ $topic }}" {{ request('topic') == $topic ? 'selected' : '' }}>{{ ucfirst($topic) }}</option>
+                            @endforeach
+                        </select>
+                    </div>
 
-                            <option value="{{ $topic }}" {{ request('topic') == $topic ? 'selected' : '' }}>
-                                {{ ucfirst($topic) }}
-                            </option>
-
-
-                        @endforeach
-                    </select>
-                </div>
-
-                <div class="col-md-4">
-                    <label for="presentation_type">Filter by Presentation Type:</label>
-                    <select name="presentation_type" id="presentation_type" class="form-control">
-                        <option value="">-- All Presentation Type --</option>
-                        <option value="oral" {{ request('presentation_type') == 'oral' ? 'selected' : '' }}>Oral</option>
-                        <option value="poster" {{ request('presentation_type') == 'poster' ? 'selected' : '' }}>Poster</option>
+                    <div class="col-md-4">
+                        <label for="presentation_type">Filter by Presentation Type:</label>
+                        <select name="presentation_type" id="presentation_type" class="form-control">
+                            <option value="">-- All Presentation Type --</option>
+                            <option value="oral" {{ request('presentation_type') == 'oral' ? 'selected' : '' }}>Oral</option>
+                            <option value="poster" {{ request('presentation_type') == 'poster' ? 'selected' : '' }}>Poster</option>
                     </select>
                 </div>
             </div>
-
             <button type="submit" class="btn btn-primary mt-3">Apply Filter</button>
         </form>
 
@@ -128,15 +144,21 @@
             @csrf
             <div class="mb-3">
                 <label for="reviewer">Assign Doctors Name:</label>
-                <input type="text" name="reviewer" id="reviewer" required>
+                <input type="text" name="reviewer" id="reviewer">
 
-                <label for="reviewer">Assignment</label>
-                <select name="stage" id="stage" required>
+                <label for="stage">Assignment</label>
+                <select name="stage" id="stage">
                         <option value="">-- All Presentation Type --</option>
-                        <option value=""> Reviewer (stage 1) </option>
-                        <option value=""> Jury (Stage 2) </option>
+                        <option value="1"> Reviewer (stage 1) </option>
+                        <option value="2"> Jury (Stage 2) </option>
                 </select>
-                <button type="submit" class="btn btn-primary mt-2">Assign Doctor to Selected</button>
+                <button type="submit" class="btn btn-primary mt-2" name="action" value="assignment">Assign Doctor to Selected</button>
+            </div>
+
+            <label for="logistic">Assign TV/Room (Logistic): example: "TV 1"/"Room 1"</label>
+            <div class="mb-3">
+                <input type="text" name="logistic" id="logistic">
+                <button type="submit" class="btn btn-primary mt-2" name="action" value="logistic">Assign TV/Room (Logistic)</button>
             </div>
 
             <table border="1" cellpadding="8" cellspacing="0">
@@ -147,8 +169,9 @@
                         <th>Event</th>
                         <th>Title</th>
                         <th>Topic</th>
-                        <th>Presentation Type</th>
                         <th>Status</th>
+                        <th>Presentation Type</th>
+                        <th>Room/TV (Logistics)</th>
                         <th>Reviewer (stage 1)</th>
                         <th>Jury (stage 2)</th>
                     </tr>
@@ -161,8 +184,9 @@
                             <td>{{ $paper->event }}</td>
                             <td>{{ $paper->title }}</td>
                             <td>{{ $paper->topic }}</td>
-                            <td>{{ $paper->presentation_type }}</td>
                             <td>{{ $paper->status }}</td>
+                            <td>{{ $paper->presentation_type }}</td>
+                            <td>{{ $paper->logistic ?? '-' }}</td>
                             <td>{{ $paper->reviewer ?? '-' }}</td>
                             <td>{{ $paper->jury ?? '-' }}</td>
                         </tr>
@@ -178,7 +202,6 @@
                     <th>Event</th>
                     <th>Reviewer</th>
                     <th>Url (stage 1)</th>
-                    <th>Url (stage 2)</th>
                 </tr>
             </thead>
             <tbody>
@@ -198,14 +221,36 @@
 
 
                             </td>
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+        <br>
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Jury</th>
+                    <th>Url (stage 2)</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach($uniqueJury as $row)
+                    @if(!is_null($row->event) && !is_null($row->jury))
+                        <tr>
+                            <td>{{ $row->event }}</td>
+                            <td>{{ $row->jury }}</td>
                             <td>
                                 @if ($paper->jury)
-                                    <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}">
-                                        {{ route('scoringList', ['event' => $row->event, 'name' => $row->reviewer]) }}
+                                    <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}">
+                                        {{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}
                                     </a>
                                 @else
                                 -
                                 @endif
+
+
                             </td>
                         </tr>
                     @endif
@@ -222,5 +267,6 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>

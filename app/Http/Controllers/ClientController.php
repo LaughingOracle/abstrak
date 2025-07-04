@@ -25,28 +25,24 @@ class ClientController extends Controller
     }
 
     public function scoringList(Request $request, $event, $name){
-        $abstractPapers = AbstractPaper::where('event', $event)->where('reviewer', $name)->get();
+        $abstractPapers = AbstractPaper::where('event', $event)->where('jury', $name)->get();
 
         return view('abstractReview2')->with('abstractPapers', $abstractPapers);
     }
-
-
-
-
-
-
+    
     public function scoreMenu(Request $request, $id){
-        $abstractPapers = AbstractPaper::find($id);
-        $forms = EventForm::where('event_id', $abstractPapers->event_id)->get();
+        $abstractPaper = AbstractPaper::find($id);
+        $forms = EventForm::where('event_id', $abstractPaper->event_id)->where('type', 'abstract')->get();
 
-        return view('scoring')->with(['forms' => $forms, 'eventId' => $abstractPapers->event_id, 'abstractPaperId' => $abstractPapers->id]);
+        return view('scoring')->with(['forms' => $forms, 'eventId' => $abstractPaper->event_id, 'abstractPaperId' => $abstractPaper->id]);
     }
 
+    public function scoreMenu2(Request $request, $id){
+        $abstractPaper = AbstractPaper::find($id);
+        $forms = EventForm::where('event_id', $abstractPaper->event_id)->where('type', $abstractPaper->presentation_type)->get();
 
-
-
-
-
+        return view('scoring2')->with(['forms' => $forms, 'eventId' => $abstractPaper->event_id, 'abstractPaperId' => $abstractPaper->id]);
+    }
 
     public function revise(Request $request, $id)
     {
@@ -87,7 +83,34 @@ class ClientController extends Controller
         }
     }
 
-    public function score(Request $request)
+    public function score2(Request $request)
+    {
+        $request->validate([
+            'event_id' => 'required|exists:events,id',
+            'abstract_paper_id' => 'required|exists:abstract_papers,id',
+            'forms' => 'required|array',
+        ]);
+
+        $eventId = $request->input('event_id');
+        $abstractPaperId = $request->input('abstract_paper_id');
+        $formGroups = $request->input('forms');
+
+        foreach ($formGroups as $eventFormId => $fields) {
+            foreach ($fields as $value) {
+                FormInput::create([
+                    'event_form_id' => $eventFormId,
+                    'abstract_paper_id' => $abstractPaperId,
+                    'value' => (string) $value,
+                ]);
+            }
+        }
+        $abstract = AbstractPaper::find($abstractPaperId);
+        return redirect()->route('scoringList', [
+            'event' => $abstract->event,
+            'name' => $abstract->jury
+        ]);
+    }
+        public function score(Request $request)
     {
         $request->validate([
             'event_id' => 'required|exists:events,id',

@@ -21,7 +21,9 @@ Route::get('/view/{id}', [ZipUploadController::class, 'viewFile'])->name('view')
 Route::get('/client/{event}/{name}', [ClientController::class, 'listing'])->name('listing');
 Route::get('/scoringList/{event}/{name}', [ClientController::class, 'scoringList'])->name('scoringList');
 Route::get('/scoreMenu/{id}', [ClientController::class, 'scoreMenu'])->name('scoreMenu');
+Route::get('/scoreMenu2/{id}', [ClientController::class, 'scoreMenu2'])->name('scoreMenu2');
 Route::post('/score', [ClientController::class, 'score'])->name('score');
+Route::post('/score2', [ClientController::class, 'score2'])->name('score2');
 Route::post('/review/{id}', [ClientController::class, 'review'])->name('review');
 Route::post('/revise/{id}', [ClientController::class, 'revise'])->name('revise');
 
@@ -58,6 +60,7 @@ Route::post('/dashboard/topic', [AdminController::class, 'assignTopic'])->name('
 Route::get('/formMenu', [AdminController::class, 'formMenu'])->name('formMenu');
 Route::post('/formInsert', [AdminController::class, 'formInsert'])->name('formInsert');
 Route::delete('/formDelete/{id}', [AdminController::class, 'deleteForm'])->name('formDelete');
+Route::get('/report', [AdminController::class, 'generateReport'])->name('report');
 
 Route::get('/forgot-password/{event}', [ForgotPasswordController::class, 'showRequestForm'])->name('custom.password.request');
 Route::post('/forgot-password/{event}', [ForgotPasswordController::class, 'sendResetLink']);

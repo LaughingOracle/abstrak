@@ -78,14 +78,14 @@
     </style>
 </head>
 <body>
-    <h1>Review Abstracts</h1>
+    <h1>Penilaian</h1>
 
     <table>
         <thead>
             <tr>
                 <th>Title</th>
                 <th>Topic</th>
-                <th>Reviewer</th>
+                <th>Jury</th>
                 <th>Score</th>
             </tr>
         </thead>
@@ -94,10 +94,10 @@
                 <tr>
                     <td>{{ $paper->title }}</td>
                     <td>{{ $paper->topic }}</td>
-                    <td>{{ $paper->reviewer }}</td>
+                    <td>{{ $paper->jury }}</td>
                     
                     <td>
-                        <form action="{{ route('scoreMenu', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
+                        <form action="{{ route('scoreMenu2', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
                             @csrf
                             <button type="submit">Score</button>
                         </form>

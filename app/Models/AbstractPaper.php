@@ -20,6 +20,7 @@ class AbstractPaper extends Model
         'description',
         'reviewer',
         'jury',
+        'logistic',
         'topic',
         'presentation_type',
         'abstract_account_id',

@@ -98,6 +98,7 @@
         // Submit to backend
         const event = document.getElementById("eventValue").value;
         const type2 = document.getElementById("type").value;
+        const label2 = document.getElementById("labelText").value;
         fetch("/formInsert",  {
             method: "POST",
             headers: {
@@ -107,7 +108,8 @@
             body: JSON.stringify({
                 html: html,
                 event: event,
-                type: type2
+                type: type2,
+                label: label2
             })
         })
         .then(res => res.json())

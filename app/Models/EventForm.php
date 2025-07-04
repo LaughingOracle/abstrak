@@ -12,6 +12,7 @@ class EventForm extends Model
 
     protected $fillable = [
         'event_id',
+        'label',
         'type',
         'html',
     ];
