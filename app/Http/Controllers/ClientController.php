@@ -116,22 +116,25 @@ class ClientController extends Controller
             'event_id' => 'required|exists:events,id',
             'abstract_paper_id' => 'required|exists:abstract_papers,id',
             'status' => 'required',
-            'forms' => 'required|array',
+            'forms' => 'array',
         ]);
 
         $eventId = $request->input('event_id');
         $abstractPaperId = $request->input('abstract_paper_id');
         $formGroups = $request->input('forms');
 
-        foreach ($formGroups as $eventFormId => $fields) {
-            foreach ($fields as $value) {
-                FormInput::create([
-                    'event_form_id' => $eventFormId,
-                    'abstract_paper_id' => $abstractPaperId,
-                    'value' => (string) $value,
-                ]);
+        if($formGroups != null){
+            foreach ($formGroups as $eventFormId => $fields) {
+                foreach ($fields as $value) {
+                    FormInput::create([
+                        'event_form_id' => $eventFormId,
+                        'abstract_paper_id' => $abstractPaperId,
+                        'value' => (string) $value,
+                    ]);
+                }
             }
         }
+
         $abstract = AbstractPaper::find($abstractPaperId);
         $this->review($abstractPaperId, $request->input('status'));
         return redirect()->route('listing', [

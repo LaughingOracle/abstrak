@@ -142,12 +142,19 @@
                         <td>{{ $abstract->created_at->format('Y-m-d') }}</td>
                         <td>{{ $abstract->status }}</td>
                         <td>
-                            <a href="{{ route('abstracts.edit', $abstract->id) }}" class="button-link">Update</a>
-                            <form action="{{ route('abstracts.destroy', $abstract->id) }}" method="POST">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
-                            </form>
+
+
+                            @if ($abstract->status == 'passed')
+                                <p> tombol upload poster/oral </p>
+                            @elseif ($expiry && $abstract->status !== 'failed')
+                                <a href="{{ route('abstracts.edit', $abstract->id) }}" class="button-link">Update</a>
+                                <form action="{{ route('abstracts.destroy', $abstract->id) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
+                                </form>
+                            @endif
+
                         </td>
                     </tr>
                 @endforeach

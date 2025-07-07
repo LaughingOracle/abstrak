@@ -45,6 +45,23 @@ class AdminController extends Controller
             if ($request->has('presentation_type') && $request->presentation_type) {
                 $query->where('presentation_type', $request->presentation_type);
             }
+
+            if ($request->has('logistic') && $request->logistic) {
+                $query->where('logistic', 'like' ,"%$request->logistic%");
+
+            }
+
+            if ($request->has('sublogistic') && $request->sublogistic) {
+                $query->where('logistic', 'like' ,"%$request->sublogistic%");
+
+            }
+
+            if ($request->has('status') && $request->status) {
+                $query->where('status',$request->status);
+
+            }
+
+
             $topics = $topicQuery->select('topic')->distinct()->pluck('topic');
             
             $abstractPapers = $query->get();
@@ -114,13 +131,14 @@ class AdminController extends Controller
         if ($user && $user->email === 'admin@gmail.com') {
             $request->validate([
                 'event' => 'required|string|max:255',
+                'deadline' => 'required'
             ]);
 
 
             if(! Event::where('event_name',$request->event)->first() ){
-            Event::create(['event_name' => $request->event]);
+                Event::create(['event_name' => $request->event, 'deadline' => $request->deadline]);
 
-            return redirect()->route('dashboard')->with('success', 'event assigned successfully.');                
+                return redirect()->route('dashboard')->with('success', 'event assigned successfully.');                
             }
             return redirect()->route('dashboard')->with('error', 'duplicate detected.');
         }else{
@@ -173,11 +191,12 @@ class AdminController extends Controller
             } 
             elseif ($request->input('action') === 'logistic') {
                 $request->validate([
-                    'logistic' => 'required|string|max:255',
+                    'logisticform' => 'string|max:255',
+                    'sublogisticform' => 'string|max:255',
                     'selected_ids' => 'required|array',
                 ]);
                     AbstractPaper::whereIn('id', $request->selected_ids)
-                    ->update(['logistic' => $request->logistic]);
+                    ->update(['logistic' => $request->logisticform . ' ' . $request->sublogisticform]);
 
                 // Handle export logic
             }
@@ -211,9 +230,9 @@ class AdminController extends Controller
         $formInputs = FormInput::whereIn('event_form_id', $eventForms->pluck('id'))
             ->whereHas('abstractPaper', function ($query) use ($type) {
                 if ($type == 'abstract') {
-                    $query->where('status', 'dalam review');
+                    $query->where('status', 'pending');
                 } else {
-                    $query->where('status', 'lulus')->where('presentation_type', $type);
+                    $query->where('status', 'passed')->where('presentation_type', $type);
                 }
             })->get();
 

@@ -30,6 +30,7 @@
             <div class="mb-3">
                 <label for="event">Assign event:</label>
                 <input type="text" name="event" id="add_event" required>
+                <input type="date" id="deadline" name="deadline" required>
                 <button type="submit" class="btn btn-primary mt-2">Assign event</button>
             </div>
         </form>
@@ -114,32 +115,74 @@
                         </option>
                         @endforeach
                     </select>
-                    </div>
+                </div>
 
-
-                    <div class="col-md-4">
-                        <label for="topic">Filter by Topic:</label>
-                        <select name="topic" id="topic" class="form-control">
-                            <option value="">-- All Topics --</option>
-                            @foreach ($topics as $topic)
-                                <option value="{{ $topic }}" {{ request('topic') == $topic ? 'selected' : '' }}>{{ ucfirst($topic) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-
-                    <div class="col-md-4">
-                        <label for="presentation_type">Filter by Presentation Type:</label>
-                        <select name="presentation_type" id="presentation_type" class="form-control">
-                            <option value="">-- All Presentation Type --</option>
-                            <option value="oral" {{ request('presentation_type') == 'oral' ? 'selected' : '' }}>Oral</option>
-                            <option value="poster" {{ request('presentation_type') == 'poster' ? 'selected' : '' }}>Poster</option>
+                <div class="col-md-4">
+                    <label for="topic">Filter by Topic:</label>
+                    <select name="topic" id="topic" class="form-control">
+                        <option value="">-- All Topics --</option>
+                        @foreach ($topics as $topic)
+                            <option value="{{ $topic }}" {{ request('topic') == $topic ? 'selected' : '' }}>{{ ucfirst($topic) }}</option>
+                        @endforeach
                     </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="presentation_type">Filter by Presentation Type:</label>
+                    <select name="presentation_type" id="presentation_type" class="form-control">
+                        <option value="">-- All Presentation Type --</option>
+                        <option value="oral" {{ request('presentation_type') == 'oral' ? 'selected' : '' }}>Oral</option>
+                        <option value="poster" {{ request('presentation_type') == 'poster' ? 'selected' : '' }}>Poster</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="status">Filter by Status:</label>
+                    <select name="status" id="status" class="form-control">
+                        <option value="">-- All Status --</option>
+                        <option value="passed" {{ request('status') == 'passed' ? 'selected' : '' }}>
+                            passed
+                        </option>
+
+                        <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>
+                            failed
+                        </option>
+                        
+                    </select>
+                </div>
+
+                <div class="col-md-4">
+                    <label for="logistic">Filter by TV/Room (Logistic):</label>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select name="logistic" id="logistic" class="form-control">
+                                <option value="">-- All Logistic --</option>
+                                <option value="TV"  {{ request('logistic') == 'TV' ? 'selected' : '' }}  >TV</option>
+                                <option value="Room" {{ request('logistic') == 'Room' ? 'selected' : '' }} >Room</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <select name="sublogistic" id="sublogistic" class="form-control">
+                                <option value="">-- All Sub-Logistic --</option>
+                                @for ($i = 1; $i <= 10; $i++)
+                                    <option value="{{ $i }}" {{ request('sublogistic') == $i ? 'selected' : '' }}>
+                                        {{ $i }}
+                                    </option>
+                                @endfor
+                            </select>
+                        </div>
+                    </div>
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-3">Apply Filter</button>
         </form>
 
+        <hr>
+
         <!-- Reviewer Assignment Form -->
+        <h4> Assignment: </h4>
         <form method="POST" action="{{ route('insertReviewer') }}">
             @csrf
             <div class="mb-3">
@@ -152,14 +195,41 @@
                         <option value="1"> Reviewer (stage 1) </option>
                         <option value="2"> Jury (Stage 2) </option>
                 </select>
-                <button type="submit" class="btn btn-primary mt-2" name="action" value="assignment">Assign Doctor to Selected</button>
+                <button id="assign-doctor" type="submit" class="btn btn-primary mt-2" name="action" value="assignment">
+                    Assign Doctor to Selected
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-md-2">
+                    <label for="logisticform">TV/Room</label>
+                    <select name="logisticform" id="logisticform" class="form-control">
+                        <option value="">-- All Logistic --</option>
+                        <option value="TV">TV</option>
+                        <option value="Room">Room</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label for="sublogisticform">Number</label>
+                    <select name="sublogisticform" id="sublogisticform" class="form-control">
+                        <option value="">-- All Sub-Logistic --</option>
+                        @for ($i = 1; $i <= 10; $i++)
+                            <option value="{{ $i }}" {{ request('sublogistic') == $i ? 'selected' : '' }}>
+                                {{ $i }}
+                            </option>
+                        @endfor
+                    </select>
+                </div>
+
+                <div class="col-md-3 d-flex align-items-end">
+                    <button id="assign-logistic" type="submit" class="btn btn-primary w-100" name="action" value="logistic">
+                        Assign TV/Room (Logistic)
+                    </button>
+                </div>
             </div>
 
-            <label for="logistic">Assign TV/Room (Logistic): example: "TV 1"/"Room 1"</label>
-            <div class="mb-3">
-                <input type="text" name="logistic" id="logistic">
-                <button type="submit" class="btn btn-primary mt-2" name="action" value="logistic">Assign TV/Room (Logistic)</button>
-            </div>
+            <br>
+            <hr>
 
             <table border="1" cellpadding="8" cellspacing="0">
                 <thead>
@@ -169,6 +239,8 @@
                         <th>Event</th>
                         <th>Title</th>
                         <th>Topic</th>
+                        <th>Abstract</th>
+                        <th>Supporting File</th>
                         <th>Status</th>
                         <th>Presentation Type</th>
                         <th>Room/TV (Logistics)</th>
@@ -184,6 +256,16 @@
                             <td>{{ $paper->event }}</td>
                             <td>{{ $paper->title }}</td>
                             <td>{{ $paper->topic }}</td>
+                            <td>
+                                <a href="{{ route('viewAbstract', ['id' => $paper->id]) }}">
+                                    View Abstract
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ route('view', ['id' => $paper->id]) }}">
+                                    View File
+                                </a>
+                            </td>
                             <td>{{ $paper->status }}</td>
                             <td>{{ $paper->presentation_type }}</td>
                             <td>{{ $paper->logistic ?? '-' }}</td>
@@ -218,8 +300,6 @@
                                 @else
                                 -
                                 @endif
-
-
                             </td>
                         </tr>
                     @endif
@@ -267,6 +347,5 @@
         });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->string('event_name');
+            $table->date('deadline');
             $table->timestamps();
         });
 
@@ -66,7 +67,8 @@ return new class extends Migration
             $table->string('jury')->nullable();
             $table->string('logistic')->nullable();
             $table->enum('presentation_type',['poster','oral']);
-            $table->enum('status',['dalam review','lulus', 'tidak lulus']);
+            $table->enum('status',['pending','passed', 'failed'])->default('pending');
+            $table->boolean('notified')->default(false); 
             $table->timestamps();
         });
 

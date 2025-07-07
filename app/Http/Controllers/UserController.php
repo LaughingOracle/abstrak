@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
-
+use Carbon\Carbon;
 class UserController extends Controller
 {
     public function listing(Request $request, $event)
@@ -27,9 +27,14 @@ class UserController extends Controller
             return view('auth.login', ['event' => $event]);
         }
 
-
         $abstracts = AbstractPaper::where('abstract_account_id', $userId)->where('event_id',auth()->user()->event_id)->get();
 
-        return view('usermenu', compact('abstracts'));
+        $deadline = Event::where('id', auth()->user()->event_id)->value('deadline');
+        
+        $deadlineDate = Carbon::parse($deadline)->startOfDay();
+        $today = Carbon::now()->startOfDay();
+
+        $expiry = $today->lessThanOrEqualTo($deadlineDate);
+        return view('usermenu', compact('abstracts', 'expiry'));
     }
 }

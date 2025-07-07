@@ -52,11 +52,11 @@
 
             <select name="status" id="status" required>
                 <option value="">-- Unselected --</option>
-                <option value="lulus">
-                    lulus
+                <option value="passed">
+                    passed
                 </option>
-                <option value="tidak lulus">
-                    tidak lulus
+                <option value="failed">
+                    failed
                 </option>
             </select>
             <br>
