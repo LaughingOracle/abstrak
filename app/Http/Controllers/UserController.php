@@ -34,7 +34,18 @@ class UserController extends Controller
         $deadlineDate = Carbon::parse($deadline)->startOfDay();
         $today = Carbon::now()->startOfDay();
 
+        $notified = $abstracts->filter(function ($abstract) {
+            return $abstract->status === 'passed' && !$abstract->notified;
+        });
+
+        $notification = $notified->isNotEmpty();
+
+        $notified->each(function ($abstract) {
+            $abstract->notified = true;
+            $abstract->save();
+        });
+
         $expiry = $today->lessThanOrEqualTo($deadlineDate);
-        return view('usermenu', compact('abstracts', 'expiry'));
+        return view('usermenu', compact('abstracts', 'expiry', 'notification'));
     }
 }

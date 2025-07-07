@@ -51,6 +51,14 @@
             margin-bottom: 20px;
         }
 
+        .notification-section {
+            background: #d6eaf8;
+            padding: 15px 20px;
+            border-left: 6px solid #3498db;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
@@ -105,8 +113,15 @@
         @endif
     @endauth
 
-    <a href="{{ route('zip.form') }}" class="button-link">Submit Abstract</a>
+    @if ($notification)
+        <div class="alert alert-info notification-section">
+            One or More of Your Abstracts Have Been Accepted
+        </div>
+    @endif
 
+    @if($expiry)
+        <a href="{{ route('zip.form') }}" class="button-link">Submit Abstract</a>
+    @endif
     @if($abstracts->isEmpty())
         <div class="no-abstracts">
             <p>No abstract found.</p>
@@ -145,7 +160,7 @@
 
 
                             @if ($abstract->status == 'passed')
-                                <p> tombol upload poster/oral </p>
+                                <p>placeholder tombol upload poster/oral </p>
                             @elseif ($expiry && $abstract->status !== 'failed')
                                 <a href="{{ route('abstracts.edit', $abstract->id) }}" class="button-link">Update</a>
                                 <form action="{{ route('abstracts.destroy', $abstract->id) }}" method="POST">

@@ -51,7 +51,7 @@ fitur pdf untuk abstarct x
 tambahan kolom untuk juri view pdf abstarct x
 reviewer stage 1 harus ada penialain x
 fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster (<--implementasi frontend bedasarkan brapa banyak abstrak dengan status 'lulus')
-fitur notif abstact diterima atau tidak (<-- sama kayak yang atas)
+fitur notif abstact diterima atau tidak x
 poster tidak usah di tampilkan oleh juri hanya oleh admin x
 tambah ruangan mana dan tv mana untuk oral dan poster x
 
