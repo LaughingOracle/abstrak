@@ -28,16 +28,19 @@ update diagram
 perubahan besar pada navigasi user, user bisa liat daftar abstrak dia, tombol delete, dan update. front end (lol) update inget dengan pilihan sebelumnya
 backend update masih belum dikerjain
 
+
 12/06/2025
 backend update udah jalan
 dashboad 100% operational (ui minimal, tapi menurut w udah cukup bagus ¯\_(ツ)_/¯)
 backend klien 90%. kurang lebih jadi, tinggal smtp
+
 
 17/06/2025
 jumat dan senin ke-skip karena sibuk, tldr, perubahan rencana, skala projek naik. sekarang jadi general purpose, perlu multi account
 sekarang backend sekitar 80% (rada nyebelin 5 hari kemudian turun 10% eh?)
 sisi user udah *seharusnya* support multi-event scenario. tinggal refine ui admin (karena belum support multi-event 100%)
 kabar baiknya cuma pelu desain UI usermenu, insert&update abstrak, client, dan folder view
+
 
 18/06/2025
 extensive debugging: dashborad workflow changed, deleted remember me box (break on use), forgot password WIP, fixed file deletetion upon update,
@@ -53,9 +56,22 @@ perubahan sistem penyimpanan file, sekarang jadi pake id (sudah termasuk upload,
 
 
 //recoil dari event fmi
-2/06/25
+2/07/25
 banyak perubahan, scope naik lagi, perlu custom form cms. kemarin fokus ke perencanaan dan desain
 hari ini implementasi. custom form cms selesai, tinggal style dan additional polish
 perlu juga ngurusin masalah redudansi (menurut gw ok aja sih)
 stage 2 perlu lebih banyak redesain, fungsinya udah bagus, tapi perlu dipikir lebih jauh gimana assignya.
 either way, pa Deni kemarin emang mau ada proses penilaian buat abstrak pula.
+
+
+3/07/25 (devnote copied from commit messages))
+presenter email dan author email hapus x
+fitur pdf untuk abstarct x
+tambahan kolom untuk juri view pdf abstarct x
+reviewer stage 1 harus ada penialain x
+
+
+4/07/25
+implementasi system 2 stage evaluasi
+implementasi system rapot (exel WIP)
+implementasi system logistic (filter WIP)
