@@ -44,24 +44,43 @@ table event form bikin jadi punya colum tipe lagi, isinya buat poster/oral x
 
 ------------prioritas ke-1----------
 
-lanjut dashboard (harusnya tinggal dikit lago)
+lanjut dashboard (harusnya tinggal dikit lagi) x
 
 presenter email dan author email hapus x
 fitur pdf untuk abstarct x
 tambahan kolom untuk juri view pdf abstarct x
 reviewer stage 1 harus ada penialain x
-fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster (<--implementasi frontend bedasarkan brapa banyak abstrak dengan status 'lulus')
+fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster x
 fitur notif abstact diterima atau tidak x
 poster tidak usah di tampilkan oleh juri hanya oleh admin x
 tambah ruangan mana dan tv mana untuk oral dan poster x
-
-
-
-
-bikin tombol upload poster/oral pas lulus, trus langsung simpen di storage/public/(poster/oral)/{abstract->id}
 
 -------------prioritas ke-2-----------
 
 bikin sistem export ke exel
 
+bikin sistem V/H radio dan checkbox di cms
+
 bikin sistem stage 2 jadi modular x
+
+style pengisian form
+
+better error handling di view presentation
+
+tombol view presentation di menu upload presentation (redudansi)
+
+rework filter (lagi, pengen pake js)
+
+------------ nalar ----------------
+
+1. bikin admin event
+2. bikin akun admin
+3. bikin event
+4. bikin topik
+5. bikin form (abstrak/poster/oral)
+6. bikin akun
+7. bikin abstrak
+8. asign reviewer
+9. review
+10. upload oral/poster
+11. juri oral/poster

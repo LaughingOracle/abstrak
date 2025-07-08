@@ -99,6 +99,7 @@ return new class extends Migration
 
     /**
      * Reverse the migrations.
+     * shit aint working btw, terlalu banyak fk
      */
     public function down(): void
     {

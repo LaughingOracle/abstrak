@@ -144,6 +144,30 @@ class ZipUploadController extends Controller
         return redirect()->route('usermenu', ['event' => $eventName])->with('success', 'File uploaded successfully.');
     }
 
+    public function uploadPresentation(Request $request)
+    {
+        $validated = $request->validate([
+            'id' => 'required',
+            'file' => 'required',
+        ]);
+
+        $id = $request->id;
+
+        $file = $request->file('file');
+        $extension = $file->getClientOriginalExtension();
+
+        $filename = "$id.$extension";
+        $filePathBak = $file->storeAs("presentation/$id", $filename); // private disk by default
+
+
+        // save to public disk (storage/app/public)
+        $filePathPublic = $file->storeAs("presentation/$id", $filename, 'public');
+
+        return back();
+    }
+
+
+
     public function viewFile(Request $request, $id)
     {
         $request->merge([ 'id' => $id]);
@@ -196,5 +220,24 @@ class ZipUploadController extends Controller
 
 
         return view('displayAbstract')->with($data);
+    }
+
+
+    public function viewPresentation($id)
+    {
+
+        $abstract = AbstractPaper::find($id);
+        $extensions = 'pdf';
+        if($abstract->presentation_type == 'poster'){
+            $extensions = 'png';
+        }
+
+        $path = "presentation/$id/$id.$extensions";
+        if (Storage::disk('public')->exists($path)) {
+            return redirect(Storage::url($path));
+        }
+
+        // File not found
+        return abort(404, 'File not found');
     }
 }

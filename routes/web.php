@@ -43,13 +43,17 @@ Route::get('/usermenu/{event}', [UserController::class, 'listing'])->name('userm
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {
         Route::get('/upload', [ZipUploadController::class, 'showForm'])->name('zip.form');
+        Route::post('/uploadPresentation', [ZipUploadController::class, 'uploadPresentation'])->name('uploadPresentation');
         Route::post('/upload', [ZipUploadController::class, 'handleUpload'])->name('zip.upload');
         Route::post('/update', [ZipUploadController::class, 'handleUpdate'])->name('zip.update');
-
         Route::resource('abstracts', AbstractPaperController::class);
 });
 
-// there's a custom admin email n password check insideall the dashboard route (VERY unoptimized)
+Route::get('/viewPresentation/{id}', [ZipUploadController::class, 'viewPresentation'])->name('viewPresentation');
+
+
+
+// there's a custom admin email n password check inside all the dashboard route (VERY unoptimized)
 Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');
 Route::post('/dashboard', [AdminController::class, 'assignReviewer'])->name('insertReviewer');
 Route::post('/dashboard/event', [AdminController::class, 'assignEvent'])->name('assignEvent');
@@ -69,7 +73,8 @@ Route::get('/reset-password/{token}/{event}', [ForgotPasswordController::class, 
 Route::post('/reset-password/{event}', [ForgotPasswordController::class, 'resetPassword']);
 
 //dev note: i know this code is fucking terrible(i exclusively wrote terrible code),
-//but the app scale mid dev (thank got its not post production).
+//but the app scale mid dev (thank got its not post production)(it got upscaled again).
+
 //there's really should've a uniform software proposal document template 
 //(like idunno, a flow diagram, theres one btw, i made that, thats why its sucked)
 

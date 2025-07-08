@@ -191,7 +191,7 @@
 
                 <label for="stage">Assignment</label>
                 <select name="stage" id="stage">
-                        <option value="">-- All Presentation Type --</option>
+                        <option value="">-- Unselected --</option>
                         <option value="1"> Reviewer (stage 1) </option>
                         <option value="2"> Jury (Stage 2) </option>
                 </select>
@@ -203,7 +203,7 @@
                 <div class="col-md-2">
                     <label for="logisticform">TV/Room</label>
                     <select name="logisticform" id="logisticform" class="form-control">
-                        <option value="">-- All Logistic --</option>
+                        <option value="">-- Unselected --</option>
                         <option value="TV">TV</option>
                         <option value="Room">Room</option>
                     </select>
@@ -212,7 +212,7 @@
                 <div class="col-md-2">
                     <label for="sublogisticform">Number</label>
                     <select name="sublogisticform" id="sublogisticform" class="form-control">
-                        <option value="">-- All Sub-Logistic --</option>
+                        <option value="">-- Unselected --</option>
                         @for ($i = 1; $i <= 10; $i++)
                             <option value="{{ $i }}" {{ request('sublogistic') == $i ? 'selected' : '' }}>
                                 {{ $i }}
@@ -254,7 +254,7 @@
                             <td><input type="checkbox" name="selected_ids[]" value="{{ $paper->id }}"></td>
                             <td>{{ $paper->id }}</td>
                             <td>{{ $paper->event }}</td>
-                            <td>{{ $paper->title }}</td>
+                            <td>{{ Str::limit($paper->title, 30) }}</td>
                             <td>{{ $paper->topic }}</td>
                             <td>
                                 <a href="{{ route('viewAbstract', ['id' => $paper->id]) }}">
@@ -267,7 +267,11 @@
                                 </a>
                             </td>
                             <td>{{ $paper->status }}</td>
-                            <td>{{ $paper->presentation_type }}</td>
+                            <td>
+                                <a href="{{ route('viewPresentation', $paper->id) }}" target="_blank">
+                                    {{ $paper->presentation_type }}</td>
+                                </a>
+                            </td>
                             <td>{{ $paper->logistic ?? '-' }}</td>
                             <td>{{ $paper->reviewer ?? '-' }}</td>
                             <td>{{ $paper->jury ?? '-' }}</td>
@@ -322,13 +326,9 @@
                             <td>{{ $row->event }}</td>
                             <td>{{ $row->jury }}</td>
                             <td>
-                                @if ($paper->jury)
-                                    <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}">
-                                        {{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}
-                                    </a>
-                                @else
-                                -
-                                @endif
+                                <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}">
+                                    {{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}
+                                </a>
 
 
                             </td>
