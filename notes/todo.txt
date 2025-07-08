@@ -71,6 +71,7 @@ tombol view presentation di menu upload presentation (redudansi)
 
 rework filter (lagi, pengen pake js)
 
+rework scoring (remove inefficient double feed, marked scoring) <- di scoringList
 ------------ nalar ----------------
 
 1. bikin admin event

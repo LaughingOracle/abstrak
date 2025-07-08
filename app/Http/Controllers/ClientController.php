@@ -26,8 +26,14 @@ class ClientController extends Controller
 
     public function scoringList(Request $request, $event, $name){
         $abstractPapers = AbstractPaper::where('event', $event)->where('jury', $name)->get();
+        $abstractIds = $abstractPapers->pluck('id');
 
-        return view('abstractReview2')->with('abstractPapers', $abstractPapers);
+        $scoreBool = FormInput::whereIn('abstract_paper_id', $abstractIds)
+            ->pluck('abstract_paper_id') // now it's just [3, 5, 7]
+            ->unique();
+        return view('abstractReview2')
+            ->with('abstractPapers', $abstractPapers)
+            ->with('scoreBool', $scoreBool);
     }
     
     public function scoreMenu(Request $request, $id){
@@ -110,7 +116,8 @@ class ClientController extends Controller
             'name' => $abstract->jury
         ]);
     }
-        public function score(Request $request)
+
+    public function score(Request $request)
     {
         $request->validate([
             'event_id' => 'required|exists:events,id',

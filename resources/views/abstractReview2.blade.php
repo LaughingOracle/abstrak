@@ -97,10 +97,12 @@
                     <td>{{ $paper->jury }}</td>
                     
                     <td>
-                        <form action="{{ route('scoreMenu2', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
-                            @csrf
-                            <button type="submit">Score</button>
-                        </form>
+                        @if(!$scoreBool->contains($paper->id))
+                            <form action="{{ route('scoreMenu2', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
+                                @csrf
+                                <button type="submit">Score</button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

@@ -113,12 +113,7 @@ class ZipUploadController extends Controller
                     return back()->withErrors(['zip_file' => 'Failed to open the zip file.']);
                 }
             }
-
-
-            
             /////////////////////////////////////////////////////////////////////////////////////////////////
-
-
 
             // Insert multiple authors
             foreach ($validated['author_name'] as $index => $name) {
@@ -175,22 +170,18 @@ class ZipUploadController extends Controller
             'id' => 'required'
         ]); // receive 'id' input from request
         $id = $request->input('id');
-
         $abstract = AbstractPaper::findOrFail($id);
-
         $eventName = DB::table('events')
                 ->where('id', $abstract->event_id)
                 ->value('event_name');
 
         $storage = Storage::disk('public')->allFiles("/extracted/{$abstract->id}");
-
         
         $data = array(
             'event' => $eventName,
             'abstract' => $abstract,
             'files' => $storage,
         );
-
 
         return view('display')->with($data);
     }
@@ -217,15 +208,12 @@ class ZipUploadController extends Controller
             'abstract' => $abstract,
             'files' => $storage,
         );
-
-
         return view('displayAbstract')->with($data);
     }
 
 
     public function viewPresentation($id)
     {
-
         $abstract = AbstractPaper::find($id);
         $extensions = 'pdf';
         if($abstract->presentation_type == 'poster'){
@@ -236,7 +224,6 @@ class ZipUploadController extends Controller
         if (Storage::disk('public')->exists($path)) {
             return redirect(Storage::url($path));
         }
-
         // File not found
         return abort(404, 'File not found');
     }
