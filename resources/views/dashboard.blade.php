@@ -25,6 +25,7 @@
     <div class="container mt-4">
         <h3> add event/topic</h3>
         <p> Dev note: Tolong baca dokumentasi yang disediakan sebelum event </P>
+        <p><a href="https://docs.google.com/document/d/1xc8ehPJVKGFQwU1n0F9zLhgcK0OoO8tlpy3GvMyPg3Q/edit?usp=sharing"> https://docs.google.com/document/d/1xc8ehPJVKGFQwU1n0F9zLhgcK0OoO8tlpy3GvMyPg3Q/edit?usp=sharing </a> <-- dokumentasi (WIP)</p>
         <form method="POST" action=" {{route('assignEvent')}} ">
             @csrf
             <div class="mb-3">
@@ -147,6 +148,10 @@
 
                         <option value="failed" {{ request('status') == 'failed' ? 'selected' : '' }}>
                             failed
+                        </option>
+
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>
+                            pending
                         </option>
                         
                     </select>

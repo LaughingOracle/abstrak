@@ -65,6 +65,12 @@
         extraOptions.innerHTML = `
           <label>Options (comma-separated):</label>
           <input type="text" id="options" placeholder="e.g. Male,Female,Other">
+          <br>
+          <label>Layout:</label>
+          <select id="layout">
+            <option value="vertical">Vertical</option>
+            <option value="horizontal">Horizontal</option>
+          </select>
         `;
       }
     }
@@ -82,11 +88,21 @@
 
         if (type === "radio" || type === "checkbox") {
             const options = document.getElementById("options").value.split(",");
-            html += `<label>${label}</label><br>`;
+            const layoutSelect = document.getElementById("layout");
+            const layout = layoutSelect ? layoutSelect.value : 'vertical';
+            const isHorizontal = layout === "horizontal";
+
+            html += `<fieldset><legend>${label}</legend>`;
             options.forEach((opt, i) => {
                 const val = opt.trim();
-                html += `<input type="${type}" name="${name}" value="${val}" id="${name}_${i}"> <label for="${name}_${i}">${val}</label><br>`;
+                html += `
+                    <label style="${isHorizontal ? 'display:inline-block; margin-right:15px;' : 'display:block;'}">
+                        <input type="${type}" name="${name}${type === 'checkbox' ? '[]' : ''}" value="${val}" id="${name}_${i}">
+                        ${val}
+                    </label>
+                `;
             });
+            html += `</fieldset>`;
         } else if (type === "range") {
             const min = document.getElementById("min").value;
             const max = document.getElementById("max").value;
@@ -99,7 +115,7 @@
         const event = document.getElementById("eventValue").value;
         const type2 = document.getElementById("type").value;
         const label2 = document.getElementById("labelText").value;
-        fetch("/formInsert",  {
+        fetch("/formInsert", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",

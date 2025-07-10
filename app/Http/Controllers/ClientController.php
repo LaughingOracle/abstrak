@@ -101,6 +101,9 @@ class ClientController extends Controller
         $abstractPaperId = $request->input('abstract_paper_id');
         $formGroups = $request->input('forms');
 
+        FormInput::where('abstract_paper_id', $abstractPaperId)->delete();
+
+
         foreach ($formGroups as $eventFormId => $fields) {
             foreach ($fields as $value) {
                 FormInput::create([

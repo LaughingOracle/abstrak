@@ -59,19 +59,19 @@ tambah ruangan mana dan tv mana untuk oral dan poster x
 
 bikin sistem export ke exel
 
-bikin sistem V/H radio dan checkbox di cms
+bikin sistem V/H radio dan checkbox di cms x
 
 bikin sistem stage 2 jadi modular x
 
 style pengisian form
 
-better error handling di view presentation
+better error handling di view presentation x
 
-tombol view presentation di menu upload presentation (redudansi)
+tombol view presentation di menu upload presentation x
 
 rework filter (lagi, pengen pake js)
 
-rework scoring (remove inefficient double feed, marked scoring) <- di scoringList
+rework scoring (remove inefficient double feed, marked scoring) x
 ------------ nalar ----------------
 
 1. bikin admin event

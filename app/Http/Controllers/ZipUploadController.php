@@ -211,20 +211,21 @@ class ZipUploadController extends Controller
         return view('displayAbstract')->with($data);
     }
 
-
     public function viewPresentation($id)
     {
         $abstract = AbstractPaper::find($id);
-        $extensions = 'pdf';
-        if($abstract->presentation_type == 'poster'){
-            $extensions = 'png';
+
+        if (!$abstract) {
+            return redirect()->back()->with('error', 'Abstract not found.');
         }
 
-        $path = "presentation/$id/$id.$extensions";
+        $extension = $abstract->presentation_type === 'poster' ? 'png' : 'pdf';
+        $path = "presentation/$id/$id.$extension";
+
         if (Storage::disk('public')->exists($path)) {
             return redirect(Storage::url($path));
         }
-        // File not found
-        return abort(404, 'File not found');
+
+        return redirect()->back()->with('error', 'Presentation file not found.');
     }
 }

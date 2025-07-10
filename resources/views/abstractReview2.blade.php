@@ -40,11 +40,11 @@
         }
 
         tbody tr:nth-child(even) {
-            background-color: #f2f6fc;
+            background-color:rgb(223, 236, 255);
         }
 
         tbody tr:hover {
-            background-color: #eaf2f8;
+            background-color:rgb(194, 229, 255);
         }
 
         a {
@@ -89,24 +89,21 @@
                 <th>Score</th>
             </tr>
         </thead>
-        <tbody>
-            @foreach ($abstractPapers as $paper)
-                <tr>
-                    <td>{{ $paper->title }}</td>
-                    <td>{{ $paper->topic }}</td>
-                    <td>{{ $paper->jury }}</td>
-                    
-                    <td>
-                        @if(!$scoreBool->contains($paper->id))
+            <tbody>
+                @foreach ($abstractPapers as $paper)
+                    <tr style="{{ $scoreBool->contains($paper->id) ? 'background-color:rgb(159, 255, 181);' : '' }}">
+                        <td>{{ $paper->title }}</td>
+                        <td>{{ $paper->topic }}</td>
+                        <td>{{ $paper->jury }}</td>
+                        <td>
                             <form action="{{ route('scoreMenu2', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
                                 @csrf
                                 <button type="submit">Score</button>
                             </form>
-                        @endif
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
     </table>
 </body>
 </html>
