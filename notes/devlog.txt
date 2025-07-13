@@ -84,3 +84,8 @@ implementasi system notifikasi
 8/07/25
 implementasi system upload/update/view poster/oral
 implementasi system 'sudah dinilai' masih perlu polish
+
+10/7/25
+error handing di view presentation
+V/H system di cms
+rework scoring 2, remove doublefeed, add marker

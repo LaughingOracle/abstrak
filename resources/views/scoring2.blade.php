@@ -4,34 +4,113 @@
     <meta charset="UTF-8">
     <title>Score Submission</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .form-block {
-            border: 1px solid #dee2e6;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border-radius: 0.5rem;
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f4f7fa;
+            padding: 40px;
+            margin: 0;
         }
+
+        .container {
+            max-width: 900px;
+            background: #fff;
+            margin: 0 auto;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        p {
+            text-align: center;
+            color: #555;
+            margin-bottom: 30px;
+        }
+
+        .form-block {
+            background-color: #f9fbfd;
+            border: 1px solid #dbe9f6;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .btn {
+            background: #2980b9;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            font-size: 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #216a94;
+        }
+
+        .alert {
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            float: right;
+            font-size: 18px;
+            cursor: pointer;
+        }
+
         .range-label {
-            font-weight: bold;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input[type="range"] {
+            width: 100%;
+        }
+
+        button[type="submit"] {
+            display: block;
+            margin: 0 auto;
         }
     </style>
 </head>
 <body>
-    <div class="container mt-4">
+    <div class="container">
 
         @if(session('success'))
-            <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <div class="alert alert-success">
                 {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
             </div>
         @endif
 
         @if(session('error'))
-            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <div class="alert alert-danger">
                 {{ session('error') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">&times;</button>
             </div>
         @endif
 
@@ -50,9 +129,7 @@
                 </div>
             @endforeach
 
-            <br>
-            <br>
-            <button type="submit" class="btn text-white" style="background-color: #2980b9;">Submit</button>
+            <button type="submit" class="btn">Submit</button>
         </form>
     </div>
 
@@ -76,7 +153,7 @@
         });
     </script>
 
-    <!-- Bootstrap JS -->
+    <!-- Optional Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

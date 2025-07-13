@@ -50,6 +50,8 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 });
 
 Route::get('/viewPresentation/{id}', [ZipUploadController::class, 'viewPresentation'])->name('viewPresentation');
+// routes/web.php
+Route::post('/download-files', [AdminController::class, 'downloadFiles'])->name('files.download');
 
 
 

@@ -54,6 +54,11 @@ fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster x
 fitur notif abstact diterima atau tidak x
 poster tidak usah di tampilkan oleh juri hanya oleh admin x
 tambah ruangan mana dan tv mana untuk oral dan poster x
+tombol khusus, agar taau poster atau oral sudah di post. 
+fitur reviewer stage 1 blm ada x
+belum bisa di tes fitur notif abstract x 
+nama file poster oral harus nama user atau judul x
+total scoring di tabel juri, jumlah poin (juri tidak perlu tau, hanya admin)
 
 -------------prioritas ke-2-----------
 
@@ -63,7 +68,7 @@ bikin sistem V/H radio dan checkbox di cms x
 
 bikin sistem stage 2 jadi modular x
 
-style pengisian form
+style pengisian form x
 
 better error handling di view presentation x
 
@@ -72,8 +77,11 @@ tombol view presentation di menu upload presentation x
 rework filter (lagi, pengen pake js)
 
 rework scoring (remove inefficient double feed, marked scoring) x
------------- nalar ----------------
+------------ prioritas ke-3 -------
 
+rework ui dashboard (mungkin mau pake semacam ribbon system)
+
+------------ nalar ---------------
 1. bikin admin event
 2. bikin akun admin
 3. bikin event

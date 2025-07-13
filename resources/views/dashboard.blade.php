@@ -232,7 +232,6 @@
                     </button>
                 </div>
             </div>
-
             <br>
             <hr>
 
@@ -285,6 +284,25 @@
                 </tbody>
             </table>
         </form>
+        <br>
+
+        <div class="row">
+            <div class="col-md-2">
+                <label for="stage2">Choose file type</label>
+                <select name="stage2" id="stage2" class="form-control">
+                        <option value="">-- Unselected --</option>
+                        <option value="1"> Abstract (stage 1) </option>
+                        <option value="2"> Presentation (Stage 2) </option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex align-items-end">
+                <button id="assign-logistic" type="submit" class="btn btn-primary w-100" name="action" value="downloads">
+                    downloads
+                </button>
+            </div>
+        </div>
+
+        <hr>
         <br>
 
         <table border="1" cellpadding="8" cellspacing="0">

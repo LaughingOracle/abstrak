@@ -10,6 +10,8 @@ use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 use App\Models\EventForm;
 use App\Models\FormInput;
+use Illuminate\Support\Facades\Storage;
+use ZipArchive;
 
 class AdminController extends Controller
 {
@@ -200,6 +202,13 @@ class AdminController extends Controller
 
                 // Handle export logic
             }
+            elseif($request->input('action') === 'downloads'){
+                $request->validate([
+                    'selected_ids' => 'required|array',
+                    'stage2'=> 'required'
+                ]);
+                return $this->downloadFiles($request->selected_ids, $request->stage2);
+            }
             return redirect()->route('dashboard')->with('success', 'Logistic assigned successfully.');
         } else{
             return redirect()->route('custom.login', ['event' => 'admin_event']);
@@ -257,4 +266,55 @@ class AdminController extends Controller
         return view('showReport', compact('eventForms', 'reportData'));
     }
 
+    public function downloadFiles($ids, $stage2) 
+    {
+
+        if (!$ids || !is_array($ids)) {
+            return back()->with('error', 'No file IDs provided.');
+        }
+
+        $documents = AbstractPaper::whereIn('id', $ids)->get();
+
+        if ($documents->isEmpty()) {
+            return back()->with('error', 'No documents found for given IDs.');
+        }
+
+        $zipFileName = 'documents_' . now()->timestamp . '.zip';
+        $zipFilePath = storage_path("app/private/tmp/{$zipFileName}");
+
+        $parrent = 'presentation';
+        if($stage2 == '1'){
+            $parrent = 'pdf';
+        }
+
+        // Make sure tmp directory exists
+        Storage::makeDirectory('tmp');
+
+        $zip = new ZipArchive;
+        if ($zip->open($zipFilePath, ZipArchive::CREATE | ZipArchive::OVERWRITE) === TRUE) {
+            foreach ($documents as $doc) {
+                $ext = 'pdf';
+                if($parrent == 'presentation' && $doc->presentation_type == 'poster'){
+                    $ext = 'png';
+                }
+                $filePath = "{$parrent}/{$doc->id}/{$doc->id}.{$ext}";
+
+                if (Storage::disk('public')->exists($filePath)) {
+                    $contents = Storage::disk('public')->get($filePath);
+
+                    // Decide how to rename: could be based on title, id, etc.
+                    $extension = pathinfo($filePath, PATHINFO_EXTENSION);
+                    $renamed = "{$doc->title}.pdf"; // Customize this
+
+                    $zip->addFromString($renamed, $contents);
+                }
+            }
+
+            $zip->close();
+        } else {
+            return back()->with('error', 'Could not create ZIP file.');
+        }
+
+        return response()->download($zipFilePath)->deleteFileAfterSend(true);
+    }
 }

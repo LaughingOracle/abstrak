@@ -122,7 +122,7 @@
                     <td>
                         <form action="{{ route('scoreMenu', ['id' => $paper->id]) }}" method="GET" style="display:inline;">
                             @csrf
-                            @if ($paper->status === "dalam review")
+                            @if ($paper->status === "pending")
                             <button type="submit">Score</button> @else
                                 {{ $paper->status }}
                             @endif
