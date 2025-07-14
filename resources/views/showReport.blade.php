@@ -33,22 +33,25 @@
     @if (empty($reportData))
         <p>No data available for this report.</p>
     @else
+
         <table>
             <thead>
                 <tr>
                     <th>Abstract Paper ID</th>
-                    @foreach ($eventForms as $eventForm)
-                        <th>{{ $eventForm->label }}</th>
+                    @foreach ($eventForms as $form)
+                        <th>{{ $form->label }}</th>
                     @endforeach
+                    <th>Total Score</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($reportData as $abstractId => $scores)
                     <tr>
                         <td>{{ $abstractId }}</td>
-                        @foreach ($eventForms as $eventForm)
-                            <td>{{ $scores[$eventForm->label] ?? '-' }}</td>
+                        @foreach ($eventForms as $form)
+                            <td>{{ $scores[$form->label] ?? '-' }}</td>
                         @endforeach
+                        <td><strong>{{ $scores['_total'] }}</strong></td>
                     </tr>
                 @endforeach
             </tbody>

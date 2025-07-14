@@ -54,11 +54,11 @@ fitur untuk lulus atau tidak lalu upload untuk materi oral atau poster x
 fitur notif abstact diterima atau tidak x
 poster tidak usah di tampilkan oleh juri hanya oleh admin x
 tambah ruangan mana dan tv mana untuk oral dan poster x
-tombol khusus, agar taau poster atau oral sudah di post. 
+tombol khusus, agar tau poster atau oral sudah di post. x 
 fitur reviewer stage 1 blm ada x
 belum bisa di tes fitur notif abstract x 
 nama file poster oral harus nama user atau judul x
-total scoring di tabel juri, jumlah poin (juri tidak perlu tau, hanya admin)
+total scoring di tabel juri, jumlah poin (juri tidak perlu tau, hanya admin) x
 
 -------------prioritas ke-2-----------
 

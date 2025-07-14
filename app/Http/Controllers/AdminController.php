@@ -101,7 +101,8 @@ class AdminController extends Controller
             'html' => 'required|string|max:65535',
             'event' => 'required|string|max:255',
             'type' => 'required',
-            'label' => 'required'
+            'label' => 'required',
+            'score_config' => 'required'
         ]);
 
         $eventModels = Event::where('event_name',$request->event)->first();
@@ -111,6 +112,7 @@ class AdminController extends Controller
             'html' => $request->input('html'),
             'type' => $request->input('type'),
             'label' => $request->input('label'),
+            'score_config' => $request->input('score_config'),
         ]);
 
         return response()->json(['success' => true]);
@@ -224,47 +226,61 @@ class AdminController extends Controller
 
         $type = $request->type;
         $event = $request->event;
+        $eventModel = Event::where('event_name', $event)->firstOrFail();
+        $eventId = $eventModel->id;
 
-        $eventModels = Event::where('event_name',$event)->first();
-        $eventId = $eventModels->id;
-        // Get all event forms for a specific event ID and type (abstract/poster/oral)
         $eventForms = EventForm::where('event_id', $eventId)->where('type', $type)->get();
+        if ($eventForms->isEmpty()) return [];
 
-        // Ensure there are event forms, else return an empty result or error
-        if ($eventForms->isEmpty()) {
-            return []; // or handle no forms scenario
+
+        $abstracts = AbstractPaper::where('event_id', $eventId)
+            ->where('status', 'passed')->where('presentation_type', $type)
+            ->get();
+
+        if($type == 'abstract'){
+            $abstracts = AbstractPaper::where('event_id', $eventId)->get();
         }
 
-        // Get all form inputs grouped by event_form_id and type (abstract/poster/oral)
         $formInputs = FormInput::whereIn('event_form_id', $eventForms->pluck('id'))
-            ->whereHas('abstractPaper', function ($query) use ($type) {
-                if ($type == 'abstract') {
-                    $query->where('status', 'pending');
-                } else {
-                    $query->where('status', 'passed')->where('presentation_type', $type);
-                }
-            })->get();
+            ->whereIn('abstract_paper_id', $abstracts->pluck('id'))
+            ->get()
+            ->groupBy('abstract_paper_id');
 
-        // Group form inputs by abstract_id
-        $groupedFormInputs = $formInputs->groupBy('abstract_paper_id');
-
-        // Prepare the report data
         $reportData = [];
 
-        // Loop over each abstract_id (e.g., each student/test)
-        foreach ($groupedFormInputs as $abstractId => $inputs) {
-            $reportData[$abstractId] = [];
+        foreach ($abstracts as $abstract) {
+            $abstractId = $abstract->id;
+            $inputSet = $formInputs->get($abstractId, collect());
+            $inputsByFormId = $inputSet->keyBy('event_form_id');
 
-            $inputsByFormId = $inputs->keyBy('event_form_id');
-            // For each form (scoring category), find the corresponding value
-            foreach ($eventForms as $eventForm) {
-                $input = $inputsByFormId->get($eventForm->id);
-                $reportData[$abstractId][$eventForm->label] = $input ? $input->value : null;
+            $row = ['_total' => 0];
+
+            foreach ($eventForms as $form) {
+                $input = $inputsByFormId->get($form->id);
+                $value = $input ? $input->value : null;
+
+                $score = 0;
+                if ($value !== null && $form->score_config) {
+                    $config = json_decode($form->score_config, true);
+                    $decoded = json_decode($value, true) ?? $value;
+
+                    if (is_array($decoded)) {
+                        $score = collect($decoded)->sum(fn($v) => $config[$v] ?? 0);
+                    } else {
+                        $score = $config[$decoded] ?? 0;
+                    }
+                    
+                }
+
+                $row[$form->label] = $score;
+                $row['_total'] += $score;
             }
+            $reportData[$abstractId] = $row;
         }
 
         return view('showReport', compact('eventForms', 'reportData'));
     }
+
 
     public function downloadFiles($ids, $stage2) 
     {

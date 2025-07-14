@@ -29,8 +29,13 @@ class ClientController extends Controller
         $abstractIds = $abstractPapers->pluck('id');
 
         $scoreBool = FormInput::whereIn('abstract_paper_id', $abstractIds)
-            ->pluck('abstract_paper_id') // now it's just [3, 5, 7]
-            ->unique();
+        ->whereHas('eventForm', function ($query) {
+            $query->where('type', '!=', 'abstract'); // or ->where('type', '<>', 'abstract')
+        })
+        ->pluck('abstract_paper_id')
+        ->unique();
+
+
         return view('abstractReview2')
             ->with('abstractPapers', $abstractPapers)
             ->with('scoreBool', $scoreBool);
@@ -103,16 +108,17 @@ class ClientController extends Controller
 
         FormInput::where('abstract_paper_id', $abstractPaperId)->delete();
 
+        foreach ($request->input('forms') as $formId => $data) {
+            if (!isset($data['value'])) continue;
 
-        foreach ($formGroups as $eventFormId => $fields) {
-            foreach ($fields as $value) {
-                FormInput::create([
-                    'event_form_id' => $eventFormId,
-                    'abstract_paper_id' => $abstractPaperId,
-                    'value' => (string) $value,
-                ]);
-            }
+            $value = $data['value'];
+            FormInput::create([
+                'event_form_id' => $formId,
+                'abstract_paper_id' => $request->abstract_paper_id,
+                'value' => is_array($value) ? json_encode($value) : $value,
+            ]);
         }
+
         $abstract = AbstractPaper::find($abstractPaperId);
         return redirect()->route('scoringList', [
             'event' => $abstract->event,
@@ -133,17 +139,19 @@ class ClientController extends Controller
         $abstractPaperId = $request->input('abstract_paper_id');
         $formGroups = $request->input('forms');
 
-        if($formGroups != null){
-            foreach ($formGroups as $eventFormId => $fields) {
-                foreach ($fields as $value) {
-                    FormInput::create([
-                        'event_form_id' => $eventFormId,
-                        'abstract_paper_id' => $abstractPaperId,
-                        'value' => (string) $value,
-                    ]);
-                }
-            }
+        FormInput::where('abstract_paper_id', $abstractPaperId)->delete();
+
+        foreach ($request->input('forms') as $formId => $data) {
+            if (!isset($data['value'])) continue;
+
+            $value = $data['value'];
+            FormInput::create([
+                'event_form_id' => $formId,
+                'abstract_paper_id' => $request->abstract_paper_id,
+                'value' => is_array($value) ? json_encode($value) : $value,
+            ]);
         }
+
 
         $abstract = AbstractPaper::find($abstractPaperId);
         $this->review($abstractPaperId, $request->input('status'));

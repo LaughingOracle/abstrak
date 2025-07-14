@@ -160,9 +160,14 @@
                             View File
                         </a></td>
                         <td>
-                        <a href="{{ route('viewPresentation', $abstract->id) }}">
-                            {{ $abstract->presentation_type }}</td>
-                        </a>
+                            {{ $abstract->presentation_type }} 
+                            @if(in_array($abstract->id, $presentationList))
+                                <br>
+                                <button onclick="window.location='{{ route('viewPresentation', $abstract->id) }}'">
+                                    View
+                                </button>
+                            @endif
+                        </td>
                         <td>{{ $abstract->created_at->format('Y-m-d') }}</td>
                         <td>{{ $abstract->status }}</td>
                         <td>
@@ -215,9 +220,6 @@
                     Submit
                 </button>
             </form>
-            <a id="viewPresentation" href="{{ route('viewPresentation', $abstract->id) }}" target="_blank">
-                view
-            </a>
         </div>
     </div>
 
@@ -225,7 +227,6 @@
         function openModal(id, type) {
             // Set abstract ID into the hidden input
             document.getElementById('abstract-id-field').value = id;
-            document.getElementById('viewPresentation').href = "{{ route('viewPresentation', ':id') }}".replace(':id', id);
 
             // Set file accept type based on presentation type
             const fileInput = document.getElementById('abstract-file-input');

@@ -15,6 +15,7 @@ class EventForm extends Model
         'label',
         'type',
         'html',
+        'score_config'
     ];
 
     public function Event()

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\AbstractPaper;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Event;
+use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 class UserController extends Controller
 {
@@ -45,7 +46,19 @@ class UserController extends Controller
             $abstract->save();
         });
 
+        $presentationList = [];
+        foreach($abstracts as $doc){
+            $ext = 'pdf';
+            if($doc->presentation_type == 'poster'){
+                $ext = 'png';
+            }
+            $filePath = "presentation/{$doc->id}/{$doc->id}.{$ext}";
+            if (Storage::disk('public')->exists($filePath)){
+                $presentationList[] = $doc->id;
+            }
+        }
+
         $expiry = $today->lessThanOrEqualTo($deadlineDate);
-        return view('usermenu', compact('abstracts', 'expiry', 'notification'));
+        return view('usermenu', compact('abstracts', 'expiry', 'notification', 'presentationList'));
     }
 }

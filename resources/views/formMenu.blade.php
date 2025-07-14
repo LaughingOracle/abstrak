@@ -13,9 +13,6 @@
 
   <label for="inputType">Select Input Type:</label>
   <select id="inputType">
-    <option value="text">String (Text)</option>
-    <option value="number">Number</option>
-    <option value="range">Range</option>
     <option value="radio">Radio</option>
     <option value="checkbox">Checkbox</option>
   </select>
@@ -25,6 +22,8 @@
   <input type="hidden" id="eventValue" value="{{ request('event') }}">
   <input type="hidden" id="type" value="{{ request('type') }}">
   <div id="extraOptions"></div>
+  <div id="scoringConfig"></div>
+
 
   <button onclick="generateHTML()">Generate Form</button>
 
@@ -59,7 +58,7 @@
       if (type === "range") {
         extraOptions.innerHTML = `
           <label>Min:</label><input type="number" id="min" value="0">
-          <label>Max:</label><input type="number" id="max" value="100">
+          <label>Max:</label><input type="number" id="max" value="10">
         `;
       } else if (type === "radio" || type === "checkbox") {
         extraOptions.innerHTML = `
@@ -78,8 +77,9 @@
     function generateHTML() {
         const type = inputType.value;
         const label = document.getElementById("labelText").value.trim();
-        const name = label.toLowerCase().replace(/\s+/g, "_");
+        const name = "value"; // fixed field name
         let html = "";
+        let score_config = null;
 
         if (!label) {
             alert("Label text is required.");
@@ -88,25 +88,38 @@
 
         if (type === "radio" || type === "checkbox") {
             const options = document.getElementById("options").value.split(",");
-            const layoutSelect = document.getElementById("layout");
-            const layout = layoutSelect ? layoutSelect.value : 'vertical';
+            const layout = document.getElementById("layout").value || 'vertical';
             const isHorizontal = layout === "horizontal";
 
             html += `<fieldset><legend>${label}</legend>`;
+            const scoringMap = {};
+
             options.forEach((opt, i) => {
                 const val = opt.trim();
+                scoringMap[val] = prompt(`Assign score for "${val}"`, "0");
+
                 html += `
                     <label style="${isHorizontal ? 'display:inline-block; margin-right:15px;' : 'display:block;'}">
-                        <input type="${type}" name="${name}${type === 'checkbox' ? '[]' : ''}" value="${val}" id="${name}_${i}">
+                        <input type="${type}" name="${name}${type === 'checkbox' ? '[]' : ''}" value="${val}" id="${label.toLowerCase().replace(/\s+/g, "_")}_${i}">
                         ${val}
                     </label>
                 `;
             });
+
             html += `</fieldset>`;
+            score_config = JSON.stringify(scoringMap);
+
         } else if (type === "range") {
             const min = document.getElementById("min").value;
             const max = document.getElementById("max").value;
+
             html = `<label for="${name}">${label}</label>\n<input type="range" id="${name}" name="${name}" min="${min}" max="${max}">`;
+
+            score_config = JSON.stringify({
+                min: parseInt(min),
+                max: parseInt(max)
+            });
+
         } else {
             html = `<label for="${name}">${label}</label>\n<input type="${type}" id="${name}" name="${name}">`;
         }
@@ -115,18 +128,24 @@
         const event = document.getElementById("eventValue").value;
         const type2 = document.getElementById("type").value;
         const label2 = document.getElementById("labelText").value;
+
+        const payload = {
+            html: html,
+            event: event,
+            type: type2,
+            label: label2,
+            score_config: score_config
+        };
+
+        console.log("Sending to backend:", payload);
+
         fetch("/formInsert", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
                 "X-CSRF-TOKEN": "{{ csrf_token() }}"
             },
-            body: JSON.stringify({
-                html: html,
-                event: event,
-                type: type2,
-                label: label2
-            })
+            body: JSON.stringify(payload)
         })
         .then(res => res.json())
         .then(data => {
@@ -142,6 +161,7 @@
             alert("Something went wrong.");
         });
     }
+
 
     document.addEventListener('DOMContentLoaded', function () {
         const rangeInputs = document.querySelectorAll('input[type="range"]');

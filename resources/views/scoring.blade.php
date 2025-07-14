@@ -119,7 +119,9 @@
 
             @foreach($forms as $form)
                 <div class="form-block" id="form-{{ $form->id }}">
-                    {!! preg_replace('/name="([^"]+)"/', 'name="forms[' . $form->id . '][$1]"', $form->html) !!}
+                    {!! preg_replace_callback('/name="value(\[\])?"/', function ($matches) use ($form) {
+                        return 'name="forms[' . $form->id . '][value]' . ($matches[1] ?? '') . '"';
+                    }, $form->html) !!}
                 </div>
             @endforeach
 

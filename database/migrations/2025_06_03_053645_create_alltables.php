@@ -83,7 +83,7 @@ return new class extends Migration
             $table->string('type');
             $table->string('label');
             $table->string('html', 1024);
-            
+            $table->json('score_config')->nullable();
             $table->timestamps();
         });
 

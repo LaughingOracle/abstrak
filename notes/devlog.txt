@@ -89,3 +89,10 @@ implementasi system 'sudah dinilai' masih perlu polish
 error handing di view presentation
 V/H system di cms
 rework scoring 2, remove doublefeed, add marker
+
+14/7/25
+rework system scoring, hapus string,range,int. fokus pake radio dan checkbox
+system scoring sekarang punya nilai, cek nilai sekarang ada nilai akhir, dikalkulasi dengan score_config
+perbaikan system notif & scoring 1
+rework tombol view presentasi, sekarang jadi ada di usermenu utama, dan cuma muncul kalo udah upload
+ditambahkan tombol download untuk admin, nama file saat download jadi judul abstrak
