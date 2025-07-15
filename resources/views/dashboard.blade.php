@@ -31,6 +31,7 @@
             <div class="mb-3">
                 <label for="event">Assign event:</label>
                 <input type="text" name="event" id="add_event" required>
+                <label for="deadline">Deadline:</label>
                 <input type="date" id="deadline" name="deadline" required>
                 <button type="submit" class="btn btn-primary mt-2">Assign event</button>
             </div>
