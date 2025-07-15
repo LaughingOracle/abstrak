@@ -96,3 +96,7 @@ system scoring sekarang punya nilai, cek nilai sekarang ada nilai akhir, dikalku
 perbaikan system notif & scoring 1
 rework tombol view presentasi, sekarang jadi ada di usermenu utama, dan cuma muncul kalo udah upload
 ditambahkan tombol download untuk admin, nama file saat download jadi judul abstrak
+
+15/7/25
+minor fixes
+bikin documentation
