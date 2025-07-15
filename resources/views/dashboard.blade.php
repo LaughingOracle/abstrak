@@ -320,13 +320,9 @@
                             <td>{{ $row->event }}</td>
                             <td>{{ $row->reviewer }}</td>
                             <td>
-                                @if ($paper->reviewer)
-                                    <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
-                                        {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
-                                    </a>
-                                @else
-                                -
-                                @endif
+                                <a href="{{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}">
+                                    {{ route('listing', ['event' => $row->event, 'name' => $row->reviewer]) }}
+                                </a>
                             </td>
                         </tr>
                     @endif
@@ -352,8 +348,6 @@
                                 <a href="{{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}">
                                     {{ route('scoringList', ['event' => $row->event, 'name' => $row->jury]) }}
                                 </a>
-
-
                             </td>
                         </tr>
                     @endif

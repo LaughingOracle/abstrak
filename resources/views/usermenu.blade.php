@@ -163,7 +163,7 @@
                             {{ $abstract->presentation_type }} 
                             @if(in_array($abstract->id, $presentationList))
                                 <br>
-                                <button onclick="window.location='{{ route('viewPresentation', $abstract->id) }}'">
+                                <button onclick="window.location='{{ route('viewPresentation', $abstract->id) }}'" >
                                     View
                                 </button>
                             @endif
