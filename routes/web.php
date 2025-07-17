@@ -39,7 +39,6 @@ Route::post('/login', [LoginController::class, 'login'])->name('custom.login.sub
 //not using middleware for custom guest access login rerouting (rerouting logic in controller)
 Route::get('/usermenu/{event}', [UserController::class, 'listing'])->name('usermenu');
 
-
 Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified'])
     ->group(function () {
         Route::get('/upload', [ZipUploadController::class, 'showForm'])->name('zip.form');
@@ -52,8 +51,6 @@ Route::middleware(['auth:sanctum', config('jetstream.auth_session'), 'verified']
 Route::get('/viewPresentation/{id}', [ZipUploadController::class, 'viewPresentation'])->name('viewPresentation');
 // routes/web.php
 Route::post('/download-files', [AdminController::class, 'downloadFiles'])->name('files.download');
-
-
 
 // there's a custom admin email n password check inside all the dashboard route (VERY unoptimized)
 Route::get('/dashboard', [AdminController::class, 'index'])->name('dashboard');

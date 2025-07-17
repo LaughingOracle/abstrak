@@ -29,9 +29,7 @@ class UserController extends Controller
         }
 
         $abstracts = AbstractPaper::where('abstract_account_id', $userId)->where('event_id',auth()->user()->event_id)->get();
-
         $deadline = Event::where('id', auth()->user()->event_id)->value('deadline');
-        
         $deadlineDate = Carbon::parse($deadline)->startOfDay();
         $today = Carbon::now()->startOfDay();
 

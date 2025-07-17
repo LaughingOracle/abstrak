@@ -29,12 +29,10 @@ class RegisterController extends Controller
                              ->where('event_id', $event->id)
                              ->exists();
 
-        
         if ($exists) {
             return redirect()->route('register.with.event', ['event' => $request->event])
                             ->with('warning', 'An account with this email already exists.');
         }
-
 
         $user = app(CreateNewUser::class)->create($request->all());
 

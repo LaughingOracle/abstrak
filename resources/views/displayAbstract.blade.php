@@ -45,7 +45,7 @@ $fileTree = buildFileTreeForTitle($files, $abstract->id);
 
         h1,p {
             color: #2c3e50;
-            text-align: center;
+            text-align: left;
             margin-bottom: 30px;
         }
 
@@ -91,11 +91,11 @@ $fileTree = buildFileTreeForTitle($files, $abstract->id);
         @php
             $presenter = \App\Models\Presenter::find($abstract->presenter_id);
         @endphp
-    <div style="text-align: center;">
+    <div style="text-align: left;">
         <span style="opacity: 0.6; font-size: 0.85em;">Presented by: {{ $presenter->name }}</span>
     </div>
-    <div style="text-align: center;">
-        <span style="opacity: 0.6; font-size: 0.85em; text-align: center;">Authored by: </span>
+    <div style="text-align: left;">
+        <span style="opacity: 0.6; font-size: 0.85em; text-align: left;">Authored by: </span>
         @php
             $authorIds = $abstract->author()->pluck('author_id');
             $existingAuthors = \App\Models\Author::whereIn('id', $authorIds)->get(['name', 'affiliation']);
@@ -105,7 +105,7 @@ $fileTree = buildFileTreeForTitle($files, $abstract->id);
         @endforeach
     </div>
 
-    <p> {{ $abstract->description }} </p>
+    <p>{!! nl2br(e($abstract->description)) !!}</p>
     
     @if (count($fileTree))
         <ul class="tree">

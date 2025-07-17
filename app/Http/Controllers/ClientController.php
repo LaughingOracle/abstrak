@@ -35,7 +35,6 @@ class ClientController extends Controller
         ->pluck('abstract_paper_id')
         ->unique();
 
-
         return view('abstractReview2')
             ->with('abstractPapers', $abstractPapers)
             ->with('scoreBool', $scoreBool);
@@ -152,7 +151,6 @@ class ClientController extends Controller
             ]);
         }
 
-
         $abstract = AbstractPaper::find($abstractPaperId);
         $this->review($abstractPaperId, $request->input('status'));
         return redirect()->route('listing', [
@@ -160,5 +158,4 @@ class ClientController extends Controller
             'name' => $abstract->reviewer
         ]);
     }
-
 }

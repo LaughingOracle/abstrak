@@ -24,7 +24,6 @@ class ZipUploadController extends Controller
         return view('upload', compact('topics'));
     }
 
-
     //todo handleUpload:
     public function handleUpload(Request $request)
     {
@@ -56,8 +55,6 @@ class ZipUploadController extends Controller
                 'name' => $validated['presenter_name'],
             ]);
 
-
-
             // Insert into `AbstractPaper` table
             $submission = AbstractPaper::create([
                 'event_id' => auth()->user()->event_id,
@@ -69,7 +66,6 @@ class ZipUploadController extends Controller
                 'abstract_account_id' => auth()->id(),
                 'presenter_id' => $presenter -> id,
             ]);
-
 
             ///////////////////////////////////////////////////////////////////////////////////////////////////////////
             
@@ -109,7 +105,6 @@ class ZipUploadController extends Controller
                     $zip->extractTo($extractPath);
                     $zip->close();
                 } else {
-                    // Handle failed zip open
                     return back()->withErrors(['zip_file' => 'Failed to open the zip file.']);
                 }
             }
@@ -154,14 +149,11 @@ class ZipUploadController extends Controller
         $filename = "$id.$extension";
         $filePathBak = $file->storeAs("presentation/$id", $filename); // private disk by default
 
-
         // save to public disk (storage/app/public)
         $filePathPublic = $file->storeAs("presentation/$id", $filename, 'public');
 
         return back();
     }
-
-
 
     public function viewFile(Request $request, $id)
     {
@@ -201,7 +193,6 @@ class ZipUploadController extends Controller
                 ->value('event_name');
 
         $storage = Storage::disk('public')->allFiles("/pdf/{$abstract->id}");
-
         
         $data = array(
             'event' => $eventName,
