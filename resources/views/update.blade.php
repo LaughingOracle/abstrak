@@ -124,14 +124,14 @@
         <br><br>
 
         <label for="pdf">Abstract PDF</label>
-        <input type="file" name="pdf" required>
+        <input type="file" name="pdf" accept=".pdf" required>
 
         <div style="display: flex; align-items: center;">
             <label for="zip_file">Supporting File (ZIP)</label>
             <span style="opacity: 0.6; font-size: 0.85em;">*optional</span>
         </div>
         
-        <input type="file" name="zip_file">
+        <input type="file" name="zip_file" accept=".zip" >
         <p style="font-size: 0.9em; color: #555; margin-top: 1em;">
             📁 Please compress your files into a <strong>.zip (not rar)</strong> archive with a maximum of 8 megabytes before uploading.  
             For best results, use supported formats like <strong>.pdf</strong>, <strong>.jpg</strong>, <strong>.mp4</strong>, or <strong>.txt</strong> inside the archive.
