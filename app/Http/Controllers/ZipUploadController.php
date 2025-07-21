@@ -120,7 +120,7 @@ class ZipUploadController extends Controller
             }
         });
 
-        // getting presenter and user email
+        // getting user email
         $emails = [
             auth()->user()->email
         ];

@@ -107,15 +107,17 @@ class ClientController extends Controller
 
         FormInput::where('abstract_paper_id', $abstractPaperId)->delete();
 
-        foreach ($request->input('forms') as $formId => $data) {
-            if (!isset($data['value'])) continue;
+        if ($request->input('forms')) {
+            foreach ($request->input('forms') as $formId => $data) {
+                if (!isset($data['value'])) continue;
 
-            $value = $data['value'];
-            FormInput::create([
-                'event_form_id' => $formId,
-                'abstract_paper_id' => $request->abstract_paper_id,
-                'value' => is_array($value) ? json_encode($value) : $value,
-            ]);
+                $value = $data['value'];
+                FormInput::create([
+                    'event_form_id' => $formId,
+                    'abstract_paper_id' => $request->abstract_paper_id,
+                    'value' => is_array($value) ? json_encode($value) : $value,
+                ]);
+            }
         }
 
         $abstract = AbstractPaper::find($abstractPaperId);
@@ -139,16 +141,17 @@ class ClientController extends Controller
         $formGroups = $request->input('forms');
 
         FormInput::where('abstract_paper_id', $abstractPaperId)->delete();
+        if ($request->input('forms')) {
+            foreach ($request->input('forms') as $formId => $data) {
+                if (!isset($data['value'])) continue;
 
-        foreach ($request->input('forms') as $formId => $data) {
-            if (!isset($data['value'])) continue;
-
-            $value = $data['value'];
-            FormInput::create([
-                'event_form_id' => $formId,
-                'abstract_paper_id' => $request->abstract_paper_id,
-                'value' => is_array($value) ? json_encode($value) : $value,
-            ]);
+                $value = $data['value'];
+                FormInput::create([
+                    'event_form_id' => $formId,
+                    'abstract_paper_id' => $request->abstract_paper_id,
+                    'value' => is_array($value) ? json_encode($value) : $value,
+                ]);
+            }
         }
 
         $abstract = AbstractPaper::find($abstractPaperId);
