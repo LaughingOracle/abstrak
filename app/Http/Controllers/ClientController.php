@@ -70,11 +70,23 @@ class ClientController extends Controller
     public function review($id, $status)
     {
         $paper = AbstractPaper::findOrFail($id);
+        $account = AbstractAccount::find($paper->abstract_account_id);
 
         $paper->status = $status;
-        $messageContent = 'abstrak anda: ' . $status;
-
         $paper->save();
+        if ($paper->status == 'failed') {
+            $subject = 'Your abstract was rejected';
+            $messageContent = 'Hello: ' . $account->full_name . 
+            ', We are sorry to inform you that your abstract entitled ' . $paper->title . ' was rejected.
+Regards, 
+MedArchive Administration';
+        }else{
+            $subject = 'Your abstract was accepted';
+            $messageContent = 'Hello: ' . $account->full_name . 
+            ', We are happy to announce that your abstract entitled ' . $paper->title . ' was accepted.
+Regards, 
+MedArchive Administration';
+        }
 
         //getting abstract account
         $abstract_account = AbstractAccount::findOrFail($paper->abstract_account_id);
@@ -87,8 +99,8 @@ class ClientController extends Controller
 
         //sending mails
         foreach ($emails as $email){
-            Mail::raw($messageContent, function ($message) use ($email) {
-                $message->to($email)->subject('Test Email');
+            Mail::raw($messageContent, function ($message) use ($email,$subject) {
+                $message->to($email)->subject($subject);
             });
         }
     }

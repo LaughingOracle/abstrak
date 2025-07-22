@@ -124,11 +124,23 @@ class ZipUploadController extends Controller
         $emails = [
             auth()->user()->email
         ];
-        
+
+        $messageContent = 'Hello: ' . $account->full_name . 
+            ', We are happy to announce that your abstract entitled ' . $paper->title . ' is now under review. 
+Regards, 
+MedArchive Administration';
+
+        $subject = 'Your abstract is under review';
+
+        // eliminate duplicates and null/empty emails
+        $emails = array_filter(array_unique($emails), function ($email) {
+            return !empty($email) && filter_var($email, FILTER_VALIDATE_EMAIL);
+        });
+
         //sending mails
         foreach ($emails as $email){
-            Mail::raw('Abstrak anda akan segera di-review', function ($message) use ($email) {
-                $message->to($email)->subject('Test Email');
+            Mail::raw($messageContent, function ($message) use ($email,$subject) {
+                $message->to($email)->subject($subject);
             });
         }
         return redirect()->route('usermenu', ['event' => $eventName])->with('success', 'File uploaded successfully.');
