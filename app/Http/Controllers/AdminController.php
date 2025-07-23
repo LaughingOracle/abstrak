@@ -181,7 +181,7 @@ class AdminController extends Controller
                 ]);
                 return $this->downloadFiles($request->selected_ids, $request->stage2);
             }
-            return redirect()->route('dashboard')->with('success', 'Logistic assigned successfully.');
+            return redirect()->route('dashboard')->with('success', 'Doctor assigned successfully.');
         } else{
             return redirect()->route('custom.login', ['event' => 'admin_event']);
         }
